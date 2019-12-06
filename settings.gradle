@@ -1,0 +1,2 @@
+include ':app', ':bluetooth', ':obstacledetection', ':computervision', ':tts'
+rootProject.name='Cane See'
