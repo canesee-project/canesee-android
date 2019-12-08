@@ -1,2 +1,2 @@
-include ':app', ':bluetooth', ':obstacledetection', ':computervision', ':tts'
+include ':app', ':bluetooth', ':obstacledetection', ':computervision', ':tts', ':serivceproviders'
 rootProject.name='Cane See'
