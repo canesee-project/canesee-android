@@ -2,7 +2,6 @@ package com.caneseeproject.sensorPortals
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
 
 /**
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
  */
 class MockSensorPortal : SensorPortal {
     override fun connect(): Sensor {
-        println("service is connected")
+        println("sensor is connected")
         return MockEchoSensor()
     }
 }
