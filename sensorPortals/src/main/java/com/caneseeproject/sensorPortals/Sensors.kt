@@ -31,7 +31,7 @@ interface Sensor {
     /**
      * Receive readings from this sensor.
      */
-    suspend fun readings(): Flow<String>
+    fun readings(): Flow<String>
 
     /**
      * Indicates whether [shutdown] has been called or not.

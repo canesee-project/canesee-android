@@ -27,9 +27,7 @@ class MockEchoSensor : Sensor {
     }
 
     @FlowPreview
-    override suspend fun readings(): Flow<String> {
-        return echoChamber.consumeAsFlow()
-    }
+    override fun readings() = echoChamber.consumeAsFlow()
 
     override fun shutdown() {
         isActive = false
