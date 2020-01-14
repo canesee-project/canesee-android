@@ -24,12 +24,12 @@ interface SensorPortal {
 interface Sensor {
 
     /**
-     * Send a message to this sensor, after encode it with the provided encoder.
+     * Send a message to this sensor, after encoding it with the provided encoder.
      */
     suspend fun send(encode: InputEncoder, vararg messages: SensorInput)
 
     /**
-     * Receive readings from this sensor, after tokenize them with the provided decoder.
+     * Receive readings from this sensor, after tokenize-ing them with the provided tokenizer.
      */
     fun readings(tokenize: ReadingTokenizer): Flow<SensorReading>
 
