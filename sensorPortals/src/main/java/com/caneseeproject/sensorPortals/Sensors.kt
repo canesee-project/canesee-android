@@ -24,14 +24,14 @@ interface SensorPortal {
 interface Sensor {
 
     /**
-     * Send a message to this sensor.
+     * Send a message to this sensor, after encode it with the provided encoder.
      */
-    suspend fun send(vararg messages: String)
+    suspend fun send(encode: InputEncoder, vararg messages: SensorInput)
 
     /**
-     * Receive readings from this sensor.
+     * Receive readings from this sensor, after tokenize them with the provided decoder.
      */
-    fun readings(): Flow<String>
+    fun readings(tokenize: ReadingTokenizer): Flow<SensorReading>
 
     /**
      * Indicates whether [shutdown] has been called or not.
