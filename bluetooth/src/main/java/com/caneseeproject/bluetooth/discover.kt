@@ -1,5 +1,5 @@
 package com.caneseeproject.bluetooth
-
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,9 +8,11 @@ import android.content.IntentFilter
 
 
 
-class discover {
-    val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+class discover(private val context : Context)  {
     private var discoveredDevices:MutableList<BluetoothDevice> = mutableListOf()
+    val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+
+    val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
 
         val receiver = object : BroadcastReceiver() {
 
@@ -24,20 +26,40 @@ class discover {
                             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                         val deviceName = device.name
                         val deviceHardwareAddress = device.address // MAC address
+                        addDiscoveredDevice(device)
+
                     }
                 }
             }
         }
     fun registerreceiver(){
-        globalActivity.ctx?.registerReceiver(receiver, filter)
+        context.registerReceiver(receiver, filter)
 
     }
-    fun canceldicovery(){
-        globalActivity.ctx?.unregisterReceiver(this.receiver)
+    fun unregisterreceiver(){
+        context.unregisterReceiver(this.receiver)
     }
+    private fun addDiscoveredDevice(device: BluetoothDevice) {
+        if (device.bondState != BluetoothDevice.BOND_BONDED)
+            return
 
+        for (device in discoveredDevices) {
+            if (device.address.equals(device.address))
+                return
+        }
+        discoveredDevices.add(device)
+    }
+    fun found(){
 
+        discoveredDevices = mutableListOf()
+        if (bluetoothAdapter?.isDiscovering!!)
+            bluetoothAdapter?.cancelDiscovery()
+        bluetoothAdapter?.startDiscovery()
+        /*for (device in discoveredDevices)
+            if (mydevice.equals(device.address))
+                mydevice.name.length.toString()*/
 
+    }
 
 
 
