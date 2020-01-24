@@ -2,29 +2,28 @@ package com.caneseeaproject.computervision
 
 import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
-
+import com.caneseeproject.sensorPortals.MockEchoSensor
+import com.caneseeproject.sensorPortals.SensorReading
 
 class ApplyInterCV: InterCV {
-    private val channel = Channel<Flow<String>>() //standalone //laterOnConsumeFromBelow
-    fun emitter(): Flow<String> =
-        { "Data" }
+    private val channel = Channel<Flow<String>>()
+
+    //convert from Flow<sensorReading> to Flow<String>
+    fun emitter(sensor_reading : Flow<SensorReading>): Flow<String> =
+        { sensor_reading.toString() }
             .asFlow()
-    suspend fun channelSend(data: Flow<String>) {
-        channel.send(emitter())
+
+    //getting data from sensorPortal
+    override suspend fun getDataBelow(rawData: SensorReading):Flow<String>{
+        val MockEchoSensor =  MockEchoSensor()
+        val received = emitter( MockEchoSensor.readings { rawData })
+        return received
     }
 
 
-
-
-    override suspend fun getData():Flow<String>{
-        val recieved =  channel.receive()
-        return recieved
-    }
-
-
-
-    override suspend fun sendData(data: Flow<String>) {
-        channelSend(getData())
+    //send data to channel opened between CV and App
+    override suspend fun sendDataUp(rawData: SensorReading) {
+        channel.send(getDataBelow(rawData))
     }
 
 }
