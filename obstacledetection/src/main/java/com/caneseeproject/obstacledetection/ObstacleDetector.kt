@@ -1,14 +1,7 @@
-package com.caneseeaproject.obstacledetection
+package com.caneseeproject.obstacledetection
 
-import android.text.util.Rfc822Tokenizer.tokenize
-import com.caneseeproject.obstacledetection.ODInput
-import com.caneseeproject.obstacledetection.ODReading
-import com.caneseeproject.obstacledetection.ObstacleDetection
-import com.caneseeproject.sensorPortals.ReadingTokenizer
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
-import com.caneseeproject.sensorPortals.SensorsTest.Companion.sensor
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 
 
@@ -34,10 +27,14 @@ class ObstacleDetector : ObstacleDetection {
     private fun odReadingTokenizer(sensorRawReading : String): ODReading {
         return when {
             //assume for this case the format is: 0_3
-            sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(sensorRawReading[2].toFloat())
+            sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
+                sensorRawReading[2].toFloat()
+            )
 
             //assume for this case the format is: 1_3
-            sensorRawReading.startsWith('1') -> ODReading.GlassesMode(sensorRawReading[2].toInt())
+            sensorRawReading.startsWith('1') -> ODReading.GlassesMode(
+                sensorRawReading[2].toInt()
+            )
 
             //TODO: other cases.
             else -> throw Exception("possibly corrupt reading.")
