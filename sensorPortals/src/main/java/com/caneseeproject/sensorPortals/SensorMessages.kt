@@ -12,7 +12,7 @@ interface SensorReading
 /**
  * converts the sensor's reading from its raw form to a project-defined higher-level object.
  */
-typealias ReadingTokenizer = (rawReading: String) -> SensorReading
+typealias ReadingTokenizer<T> = (rawReading: String) -> T
 
 /**
  * Dummy SensorReading for tests and simple readings.
@@ -26,7 +26,7 @@ interface SensorInput
 /**
  * converts a project-defined higher-level input to a raw input, suitable for sending over a portal.
  */
-typealias InputEncoder = (encodedReading: SensorInput) -> String
+typealias InputEncoder<T> = (encodedReading: T) -> String
 
 class StringInput(val value: String) : SensorInput
 class IntInput(val value: Int) : SensorInput
