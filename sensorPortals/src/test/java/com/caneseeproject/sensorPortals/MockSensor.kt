@@ -2,7 +2,6 @@ package com.caneseeproject.sensorPortals
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 
@@ -24,12 +23,12 @@ class MockEchoSensor : Sensor {
     override var isActive: Boolean = true
     private val echoChamber: Channel<String> = Channel(10) //accept 10 events then suspend.
 
-    override suspend fun send(encode: InputEncoder, vararg messages: SensorInput) {
+    override suspend fun <T : SensorInput> send(encode: InputEncoder<T>, vararg messages: T) {
         messages.forEach { echoChamber.send(encode(it)) }
     }
 
     @FlowPreview
-    override fun readings(tokenize: ReadingTokenizer): Flow<SensorReading> =
+    override fun <T : SensorReading> readings(tokenize: ReadingTokenizer<T>) =
         echoChamber.consumeAsFlow().map { tokenize(it) }
 
     override fun shutdown() {
@@ -40,7 +39,7 @@ class MockEchoSensor : Sensor {
 
 }
 
-val mockEncode: InputEncoder = { encodedInput ->
+val mockEncode: InputEncoder<SensorInput> = { encodedInput ->
     if (encodedInput is StringInput) encodedInput.value else throw Exception(":(")
 }
-val mockTokenize: ReadingTokenizer = { reading -> StringReading(reading) }
+val mockTokenize: ReadingTokenizer<SensorReading> = { reading -> StringReading(reading) }
