@@ -26,12 +26,12 @@ interface Sensor {
     /**
      * Send a message to this sensor, after encoding it with the provided encoder.
      */
-    suspend fun send(encode: InputEncoder, vararg messages: SensorInput)
+    suspend fun <T : SensorInput> send(encode: InputEncoder<T>, vararg messages: T)
 
     /**
      * Receive readings from this sensor, after tokenize-ing them with the provided tokenizer.
      */
-    fun readings(tokenize: ReadingTokenizer): Flow<SensorReading>
+    fun <T : SensorReading> readings(tokenize: ReadingTokenizer<T>): Flow<T>
 
     /**
      * Indicates whether [shutdown] has been called or not.
