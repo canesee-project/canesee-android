@@ -1,11 +1,13 @@
 package com.caneseeaproject.obstacledetection
 
 import android.text.util.Rfc822Tokenizer.tokenize
-import com.caneseeproject.obstacledetection.IObstacleDetection
-import com.caneseeproject.obstacledetection.ObstacleDetectorData
+import com.caneseeproject.obstacledetection.ODInput
+import com.caneseeproject.obstacledetection.ODReading
+import com.caneseeproject.obstacledetection.ObstacleDetection
 import com.caneseeproject.sensorPortals.ReadingTokenizer
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
+import com.caneseeproject.sensorPortals.SensorsTest.Companion.sensor
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -13,62 +15,62 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 
 
-class ObstacleDetector : IObstacleDetection {
-
-    private val mic: Channel<String> = Channel(10)
+class ObstacleDetector : ObstacleDetection {
 
     /**
      * Asking Bluetooth module for a cane
      */
-    var sensor : SensorPortal = //TODO
+    private val odPortal: SensorPortal = //TODO
 
-    var cane : Sensor
+    private var cane: Sensor
 
     /**
      * Connecting with this cane
      */
-    fun activate(): Sensor{
-        cane = sensor.connect()
-        return cane
+    fun activate(){
+        cane = odPortal.connect()
     }
 
     /**
-     * Index of the received message from the Cane
-     */
-    var indexOfThisReading : Int = 0
-    /**
      * Tokenizer to convert the reading received from the cane into a high level data
      */
-    suspend fun odReadingTokenizer(sensorRawReading : String): ObstacleDetectorData.ODReading{
-        val odReading : ObstacleDetectorData.ODReading
-        odReading.readingID = indexOfThisReading
-        odReading.controlType =  //TODO
-        odReading.controlValue = //TODO
-        indexOfThisReading ++
-        return odReading
+    private fun odReadingTokenizer(sensorRawReading : String): ODReading {
+        return when {
+            //assume for this case the format is: 0_3
+            sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(sensorRawReading[2].toFloat())
+
+            //assume for this case the format is: 1_3
+            sensorRawReading.startsWith('1') -> ODReading.GlassesMode(sensorRawReading[2].toInt())
+
+            //TODO: other cases.
+            else -> throw Exception("possibly corrupt reading.")
+        }
     }
 
     /**
      * Encoder to convert the high level data into a form of a string
      */
-    suspend fun odInputEncoder(highLevelInput: ObstacleDetectorData.ODInput) : String{
-        //TODO
-        return String()
+    suspend fun odInputEncoder(highLevelInput: ODInput) : String{
+        return when (highLevelInput) {
+            is ODInput.RangeControl -> "${highLevelInput.percentage}"
+            // TODO: other cases
+            else -> throw Exception("the russians did it!")
+        }
     }
 
     /**
      * Get data from the cane
      */
-    override suspend fun detectObstacles() : Flow<ObstacleDetectorData.ODReading> {
-        cane.readings(tokenize : odReadingTokenizer()): Flow<ODReading> =
-        mic.consumeAsFlow().map { tokenize(it) }
-    }
+    fun detectObstacles(): Flow<ODReading.ObstacleDistance> =
+        cane
+            .readings(::odReadingTokenizer)
+            .filterIsInstance<ODReading.ObstacleDistance>()
+
 
     /**
      * Send data into the cane (set the cane)
      */
-    override suspend fun setOD(caneValue: ObstacleDetectorData.ODInput) {
-        cane.send(encode : odInputEncoder(), vararg messages : ObstacleDetectorData.ODInput)
+    suspend fun control(what: ODInput) {
+        cane.send(::odInputEncoder, what)
     }
-
 }

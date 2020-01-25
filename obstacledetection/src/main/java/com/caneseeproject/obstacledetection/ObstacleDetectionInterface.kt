@@ -4,29 +4,30 @@ import com.caneseeproject.sensorPortals.SensorInput
 import com.caneseeproject.sensorPortals.SensorReading
 import org.intellij.lang.annotations.Flow
 
-sealed class ObstacleDetectorData{
+sealed class ODReading : SensorReading {
 
-    /**
-     * Obstacle Detector sensor reading
-     */
-    class ODReading(var readingID : Int ,var controlType : String , var controlValue : Int) : SensorReading{}
+    class ObstacleDistance(val distance: Float) : ODReading()
 
-    /**
-     * Obstacle Detector sensor input
-     */
-    class ODInput(var inputID : Int , var controlType : String , var controlValue : Int) : SensorInput{}
+    class GlassesMode(val mode: Int) : ODReading()
+
+    //TODO any other type of reading
 }
 
-interface IObstacleDetection {
+sealed class ODInput : SensorInput {
+
+    class RangeControl(val percentage : Int ) : ODInput()
+
+    //TODO any other type of input
+
+}
+interface ObstacleDetection {
 
     /**
      * Provides flow of high level sensor readings
      */
-    suspend fun detectObstacles(): Flow<ObstacleDetectorData.ODReading>
-
+    suspend fun detectObstacles(): Flow<ODReading.ObstacleDistance>
     /**
      * Change the cane settings
      */
-    suspend fun setOD(caneValue: ObstacleDetectorData.ODInput) : Flow<String>
-
+    suspend fun control(what: ODInput)
 }
