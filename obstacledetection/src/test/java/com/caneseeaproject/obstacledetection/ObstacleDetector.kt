@@ -9,10 +9,7 @@ import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import com.caneseeproject.sensorPortals.SensorsTest.Companion.sensor
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 
 class ObstacleDetector : ObstacleDetection {
@@ -20,7 +17,7 @@ class ObstacleDetector : ObstacleDetection {
     /**
      * Asking Bluetooth module for a cane
      */
-    private val odPortal: SensorPortal = //TODO
+    private val odPortal: SensorPortal = TODO()
 
     private var cane: Sensor
 
@@ -50,7 +47,7 @@ class ObstacleDetector : ObstacleDetection {
     /**
      * Encoder to convert the high level data into a form of a string
      */
-    suspend fun odInputEncoder(highLevelInput: ODInput) : String{
+    fun odInputEncoder(highLevelInput: ODInput) : String{
         return when (highLevelInput) {
             is ODInput.RangeControl -> "${highLevelInput.percentage}"
             // TODO: other cases
@@ -61,7 +58,7 @@ class ObstacleDetector : ObstacleDetection {
     /**
      * Get data from the cane
      */
-    fun detectObstacles(): Flow<ODReading.ObstacleDistance> =
+    override fun detectObstacles(): Flow<ODReading.ObstacleDistance> =
         cane
             .readings(::odReadingTokenizer)
             .filterIsInstance<ODReading.ObstacleDistance>()
@@ -70,7 +67,7 @@ class ObstacleDetector : ObstacleDetection {
     /**
      * Send data into the cane (set the cane)
      */
-    suspend fun control(what: ODInput) {
+    override suspend fun control(what: ODInput) {
         cane.send(::odInputEncoder, what)
     }
 }

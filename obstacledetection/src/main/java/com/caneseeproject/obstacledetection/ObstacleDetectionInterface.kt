@@ -2,7 +2,8 @@ package com.caneseeproject.obstacledetection
 
 import com.caneseeproject.sensorPortals.SensorInput
 import com.caneseeproject.sensorPortals.SensorReading
-import org.intellij.lang.annotations.Flow
+import kotlinx.coroutines.flow.Flow
+
 
 sealed class ODReading : SensorReading {
 
@@ -25,7 +26,7 @@ interface ObstacleDetection {
     /**
      * Provides flow of high level sensor readings
      */
-    suspend fun detectObstacles(): Flow<ODReading.ObstacleDistance>
+    fun detectObstacles(): Flow<ODReading.ObstacleDistance>
     /**
      * Change the cane settings
      */
