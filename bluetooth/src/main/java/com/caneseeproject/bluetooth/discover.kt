@@ -5,12 +5,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
+import android.widget.Toast
 
 
 
-class discover(private val context : Context)  {
+class discover(val context: Context)  {
     private var discoveredDevices:MutableList<BluetoothDevice> = mutableListOf()
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    val mydevice : String = "98:D3:61:FD:66:FB"
+    //val mydevice : String = "54:27:58:C2:18:CF"
+
+    var MYdevice = bluetoothAdapter!!.getRemoteDevice(mydevice)
+    val serviceprovider = serviceProvider.ConnectionThreed(MYdevice)
 
     val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
 
@@ -27,6 +34,13 @@ class discover(private val context : Context)  {
                         val deviceName = device.name
                         val deviceHardwareAddress = device.address // MAC address
                         addDiscoveredDevice(device)
+                       // Toast.makeText(context, device.uuids.toString(), Toast.LENGTH_LONG).show()
+
+                        if(MYdevice.address.equals(device.address)){
+                            Toast.makeText(context, "EQQQQUUUAAAALLLLSSS", Toast.LENGTH_LONG).show()
+                            //serviceprovider.run()
+
+                        }
 
                     }
                 }
@@ -40,27 +54,39 @@ class discover(private val context : Context)  {
         context.unregisterReceiver(this.receiver)
     }
     private fun addDiscoveredDevice(device: BluetoothDevice) {
-        if (device.bondState != BluetoothDevice.BOND_BONDED)
+        if (device.bondState != BluetoothDevice.BOND_BONDED) {
             return
+        }
 
         for (device in discoveredDevices) {
             if (device.address.equals(device.address))
                 return
         }
+
         discoveredDevices.add(device)
     }
-    fun found(){
+    fun search(){
 
         discoveredDevices = mutableListOf()
-        if (bluetoothAdapter?.isDiscovering!!)
-            bluetoothAdapter?.cancelDiscovery()
-        bluetoothAdapter?.startDiscovery()
-        /*for (device in discoveredDevices)
-            if (mydevice.equals(device.address))
-                mydevice.name.length.toString()*/
+        if (bluetoothAdapter!!.isDiscovering!!)
+            bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter.startDiscovery()
 
     }
+    fun endBluetooth(){
+        if (bluetoothAdapter?.isEnabled == true) {
+            bluetoothAdapter.disable()
+            Log.i("MyActivity", "OOOOOOFFFFFFFF")
+            serviceprovider.cancel()
 
 
+        }
+    }
+    fun startBluetooth(){
+        if (bluetoothAdapter?.isEnabled == false) {
+            bluetoothAdapter.enable()
+            Log.i("MyActivity", "ooooooonnnnnnnnnnn")
 
+        }
+    }
 }
