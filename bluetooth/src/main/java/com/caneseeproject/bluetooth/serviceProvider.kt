@@ -17,6 +17,7 @@ import java.util.*
 
      override fun connect(bluetoothDevice: BluetoothDevice, flag : Boolean) :Sensor {
          val sensordata = sensorData()
+
          val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
          val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
          val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(MY_UUID)
@@ -33,12 +34,7 @@ import java.util.*
 
          return sensordata
 
-
-
         }
-
-
-
     fun startBluetooth(){
         if (bluetoothAdapter?.isEnabled == false) {
             bluetoothAdapter.enable()
