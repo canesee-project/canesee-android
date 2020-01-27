@@ -28,15 +28,17 @@ class ComputerVisionInAction : ComputerVision {
         }
     }
 
-     private fun cvEncode( processed: CVInput): String {
+    private fun cvEncode(processed: CVInput): String {
         return when (processed) {
-            is CVInput.Vision -> {"${processed.rawData}"}
+            is CVInput.Vision -> {
+                "${processed.rawData}"
+            }
             else -> throw Exception("the russians did it for CV !")
         }
     }
 
-    override fun modeChanges():Flow<CVReading.ModeChange> {
-        return  CV
+    override fun modeChanges(): Flow<CVReading.ModeChange> {
+        return CV
             .readings(::cvTokenize).filterIsInstance()
 
 
@@ -44,9 +46,9 @@ class ComputerVisionInAction : ComputerVision {
 
 
     override suspend fun setMode(mode: CVInput) {
-            CV.send(::cvEncode , mode)
+        CV.send(::cvEncode, mode)
 
-        }
     }
+}
 
 
