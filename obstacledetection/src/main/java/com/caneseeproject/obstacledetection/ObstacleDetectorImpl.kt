@@ -2,22 +2,15 @@ package com.caneseeproject.obstacledetection
 
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 
 
-class ObstacleDetector : ObstacleDetection {
+class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetection {
 
-    /**
-     * Asking Bluetooth module for a cane
-     */
-    private val odPortal: SensorPortal = TODO()
+    private lateinit var cane: Sensor
 
-    private var cane: Sensor
-
-    /**
-     * Connecting with this cane
-     */
-    fun activate(){
+    override fun activate() {
         cane = odPortal.connect()
     }
 
