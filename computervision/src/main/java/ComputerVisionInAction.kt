@@ -1,5 +1,4 @@
-package com.caneseeaproject.obstacledetection
-
+package com.caneseeaproject.computervision
 
 
 import com.caneseeaproject.computervision.ComputerVision
