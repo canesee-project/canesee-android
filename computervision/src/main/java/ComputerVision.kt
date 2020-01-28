@@ -1,9 +1,9 @@
 package com.caneseeaproject.computervision
 
 import com.caneseeproject.sensorPortals.SensorInput
+import com.caneseeproject.sensorPortals.SensorPortal
 import com.caneseeproject.sensorPortals.SensorReading
 import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
 
 
 interface ComputerVision {

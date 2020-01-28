@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 
 
-class ComputerVisionInAction(private val cvPortal: SensorPortal) : ComputerVision {
+internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : ComputerVision {
 
     private lateinit var cv: Sensor
 
