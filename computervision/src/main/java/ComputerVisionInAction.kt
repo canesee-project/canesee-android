@@ -20,33 +20,28 @@ class ComputerVisionInAction : ComputerVision {
         CV = CVPortal.connect()
     }
 
-    private fun cvTokenize(rawData: String): CVReading {
+    private fun cvTokenize(rawData: String): Vision {
         return when {
-            rawData.startsWith('1') -> CVReading.ModeChange(rawData[2].toInt())
-            else -> throw Exception("possibly corrupt reading bs in CV.")
+            rawData.startsWith('1') -> Vision.OCR(rawData)
+            else -> throw Exception("the russians did it for cv !")
         }
     }
 
     private fun cvEncode(processed: CVInput): String {
         return when (processed) {
-            is CVInput.Vision -> {
-                "${processed.rawData}"
+            is CVInput.ModeChange -> {
+                "${processed.mode}"
             }
-            else -> throw Exception("the russians did it for CV !")
         }
     }
 
-    override fun modeChanges(): Flow<CVReading.ModeChange> {
-        return CV
-            .readings(::cvTokenize).filterIsInstance()
-
-
+    override fun visions(): Flow<Vision> {
+        return cv.readings(::cvTokenize).filterIsInstance()
     }
 
 
     override suspend fun setMode(mode: CVInput) {
-        CV.send(::cvEncode, mode)
-
+        cv.send(::cvEncode, mode)
     }
 }
 
