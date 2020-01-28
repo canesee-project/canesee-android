@@ -1,19 +1,14 @@
 package com.caneseeaproject.computervision
 
-
-import com.caneseeaproject.computervision.ComputerVision
-import com.caneseeaproject.computervision.CVInput
-import com.caneseeaproject.computervision.CVReading
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 
 
-class ComputerVisionInAction : ComputerVision {
+class ComputerVisionInAction(private val cvPortal: SensorPortal) : ComputerVision {
 
-    private val CVPortal: SensorPortal = TODO()
-    private var CV: Sensor
+    private lateinit var cv: Sensor
 
 
     fun activate() {
