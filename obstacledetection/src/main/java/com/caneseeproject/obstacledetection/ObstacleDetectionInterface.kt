@@ -24,6 +24,11 @@ sealed class ODInput : SensorInput {
 interface ObstacleDetection {
 
     /**
+     * Connecting with this cane
+     */
+    fun activate()
+
+    /**
      * Provides flow of high level sensor readings
      */
     fun detectObstacles(): Flow<ODReading.ObstacleDistance>

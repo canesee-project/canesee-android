@@ -12,12 +12,7 @@ class ObstacleDetector : ObstacleDetection {
      */
     private val odPortal: SensorPortal = TODO()
 
-    private var cane: Sensor
-
-    /**
-     * Connecting with this cane
-     */
-    fun activate(){
+    override fun activate() {
         cane = odPortal.connect()
     }
 
