@@ -2,29 +2,22 @@ package com.caneseeproject.obstacledetection
 
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 
 
-class ObstacleDetector : ObstacleDetection {
+internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetector {
 
-    /**
-     * Asking Bluetooth module for a cane
-     */
-    private val odPortal: SensorPortal = TODO()
+    private lateinit var cane: Sensor
 
-    private var cane: Sensor
-
-    /**
-     * Connecting with this cane
-     */
-    fun activate(){
+    override fun activate() {
         cane = odPortal.connect()
     }
 
     /**
      * Tokenizer to convert the reading received from the cane into a high level data
      */
-    private fun odReadingTokenizer(sensorRawReading : String): ODReading {
+    private fun odReadingTokenizer(sensorRawReading: String): ODReading {
         return when {
             //assume for this case the format is: 0_3
             sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
@@ -44,11 +37,10 @@ class ObstacleDetector : ObstacleDetection {
     /**
      * Encoder to convert the high level data into a form of a string
      */
-    fun odInputEncoder(highLevelInput: ODInput) : String{
+    private fun odInputEncoder(highLevelInput: ODInput): String {
         return when (highLevelInput) {
             is ODInput.RangeControl -> "${highLevelInput.percentage}"
             // TODO: other cases
-            else -> throw Exception("the russians did it!")
         }
     }
 
@@ -56,10 +48,8 @@ class ObstacleDetector : ObstacleDetection {
      * Get data from the cane
      */
     override fun detectObstacles(): Flow<ODReading.ObstacleDistance> =
-        cane
-            .readings(::odReadingTokenizer)
-            .filterIsInstance<ODReading.ObstacleDistance>()
-
+        cane.readings(::odReadingTokenizer)
+            .filterIsInstance()
 
     /**
      * Send data into the cane (set the cane)
