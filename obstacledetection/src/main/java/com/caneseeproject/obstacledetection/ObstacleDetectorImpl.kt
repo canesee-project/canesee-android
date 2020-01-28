@@ -17,7 +17,7 @@ class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetecti
     /**
      * Tokenizer to convert the reading received from the cane into a high level data
      */
-    private fun odReadingTokenizer(sensorRawReading : String): ODReading {
+    private fun odReadingTokenizer(sensorRawReading: String): ODReading {
         return when {
             //assume for this case the format is: 0_3
             sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
@@ -37,11 +37,10 @@ class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetecti
     /**
      * Encoder to convert the high level data into a form of a string
      */
-    fun odInputEncoder(highLevelInput: ODInput) : String{
+    private fun odInputEncoder(highLevelInput: ODInput): String {
         return when (highLevelInput) {
             is ODInput.RangeControl -> "${highLevelInput.percentage}"
             // TODO: other cases
-            else -> throw Exception("the russians did it!")
         }
     }
 
@@ -49,10 +48,8 @@ class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetecti
      * Get data from the cane
      */
     override fun detectObstacles(): Flow<ODReading.ObstacleDistance> =
-        cane
-            .readings(::odReadingTokenizer)
-            .filterIsInstance<ODReading.ObstacleDistance>()
-
+        cane.readings(::odReadingTokenizer)
+            .filterIsInstance()
 
     /**
      * Send data into the cane (set the cane)
