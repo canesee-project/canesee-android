@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 
 
-class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetection {
+internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetector {
 
     private lateinit var cane: Sensor
 

@@ -1,6 +1,7 @@
 package com.caneseeproject.obstacledetection
 
 import com.caneseeproject.sensorPortals.SensorInput
+import com.caneseeproject.sensorPortals.SensorPortal
 import com.caneseeproject.sensorPortals.SensorReading
 import kotlinx.coroutines.flow.Flow
 
@@ -22,7 +23,7 @@ sealed class ODInput : SensorInput {
 
 }
 
-interface ObstacleDetection {
+interface ObstacleDetector {
 
     /**
      * Connecting with this cane
@@ -38,4 +39,8 @@ interface ObstacleDetection {
      * Change the cane settings
      */
     suspend fun control(what: ODInput)
+
+    companion object Factory {
+        fun create(portal: SensorPortal): ObstacleDetector = ObstacleDetectorImpl(portal)
+    }
 }
