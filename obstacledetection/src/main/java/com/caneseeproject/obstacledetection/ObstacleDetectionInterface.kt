@@ -16,11 +16,12 @@ sealed class ODReading : SensorReading {
 
 sealed class ODInput : SensorInput {
 
-    class RangeControl(val percentage : Int ) : ODInput()
+    class RangeControl(val percentage: Int) : ODInput()
 
     //TODO any other type of input
 
 }
+
 interface ObstacleDetection {
 
     /**
@@ -32,6 +33,7 @@ interface ObstacleDetection {
      * Provides flow of high level sensor readings
      */
     fun detectObstacles(): Flow<ODReading.ObstacleDistance>
+
     /**
      * Change the cane settings
      */
