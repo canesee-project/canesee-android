@@ -8,8 +8,9 @@ import org.json.JSONObject
 
 interface ComputerVision {
 
-    fun modeChanges():Flow<CVReading.ModeChange>
-    suspend fun setMode(mode: CVInput) //app detect mode of glasses
+    fun activate()
+
+    fun visions(): Flow<Vision>
 
     suspend fun setMode(mode: CVInput) //app change mode of glasses
 

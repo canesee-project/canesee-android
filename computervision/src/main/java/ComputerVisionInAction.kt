@@ -10,9 +10,8 @@ class ComputerVisionInAction(private val cvPortal: SensorPortal) : ComputerVisio
 
     private lateinit var cv: Sensor
 
-
-    fun activate() {
-        CV = CVPortal.connect()
+    override fun activate() {
+        cv = cvPortal.connect()
     }
 
     private fun cvTokenize(rawData: String): Vision {
