@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asFlow
 import java.io.InputStream
 import java.io.OutputStreamWriter
 
-class SensorData(private val socket: BluetoothSocket) : Sensor {
+internal class SensorData(private val socket: BluetoothSocket) : Sensor {
     private val mmInStream: InputStream = socket.inputStream
     private val mmOutStream: OutputStreamWriter = socket.outputStream.writer()
 

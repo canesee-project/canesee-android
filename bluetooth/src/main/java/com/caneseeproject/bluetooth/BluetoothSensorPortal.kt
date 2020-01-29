@@ -8,7 +8,8 @@ import com.caneseeproject.sensorPortals.SensorPortal
 import java.util.*
 
 
-class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
+internal class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
+
     private val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     // val HC05 : String = "98:D3:61:FD:66:FB"
     private var device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(MAC)
@@ -22,3 +23,5 @@ class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
         return sensordata
     }
 }
+
+fun BluetoothPortal(MAC: String): SensorPortal = BluetoothSensorPortal(MAC)
