@@ -1,54 +1,31 @@
 package com.caneseeproject.bluetooth
 
-import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import android.text.util.Rfc822Tokenizer
-import android.text.util.Rfc822Tokenizer.tokenize
 import com.caneseeproject.sensorPortals.*
-import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.forEach
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.charset.Charset
 
 class sensorData(private  val socket: BluetoothSocket) : Sensor{
     val mmInStream: InputStream = socket.inputStream
-    val mmBuffer: ByteArray = ByteArray(1024)
+    val mmOutStream: OutputStream = socket.outputStream
 
-    override fun <T : SensorReading> readings(tokenize: ReadingTokenizer<T>): Flow<T> {
-        var sringed_flow :ReceiveChannel<Char> = Channel()
-        var reciever : Channel<String> = Channel()
-        fun producer() = runBlocking {
-            sringed_flow = produce {
-                mmInStream.read(mmBuffer).toString().forEach {
-                    send(it)
-                    reciever.consumeEach { it }
-                }
-            }
+    override fun <T : SensorReading> readings(tokenize: ReadingTokenizer<T>): Flow<T> =
+        mmInStream.reader().buffered(5).lineSequence().map(tokenize).asFlow()
 
-        }
-        val result: Flow<SensorReading> = reciever.consumeAsFlow().map { tokenize(it) }
-        return result
+    override suspend fun <T : SensorInput> send(encode: InputEncoder<T>, vararg messages: T) =
+        messages.forEach { mmOutStream.write(encode(it).toByteArray()) }
 
-
-    }
-
-
-
-
-
-
-    override suspend fun <T : SensorInput> send(encode: InputEncoder<T>, vararg messages: T) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override val isActive: Boolean
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = socket.isConnected
 
     override fun shutdown() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        socket.close()
     }
 
 }
