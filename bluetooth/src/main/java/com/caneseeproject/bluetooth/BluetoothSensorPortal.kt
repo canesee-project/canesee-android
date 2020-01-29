@@ -15,12 +15,15 @@ internal class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
     private var device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(MAC)
 
     override fun connect(): Sensor {
-        val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-        val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(MY_UUID)
+        val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(SERIAL_UUID)
         val sensordata = SensorData(socket)
         bluetoothAdapter.cancelDiscovery()
         socket.connect()
         return sensordata
+    }
+
+    companion object {
+        private val SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     }
 }
 
