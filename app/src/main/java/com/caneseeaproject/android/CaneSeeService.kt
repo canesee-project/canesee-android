@@ -45,6 +45,8 @@ class CaneSeeService : Service(), CoroutineScope {
     }
 
     fun controlGlasses(action: CVInput) = launch {
+        delay(1000) //delay so as not to freak the glasses out!
+        //TODO: I don't trust this delay.
         glasses.setMode(action)
     }
 
