@@ -6,11 +6,12 @@ import android.os.Binder
 import com.caneseeaproject.computervision.CVInput
 import com.caneseeaproject.computervision.ComputerVision
 import com.caneseeaproject.computervision.Vision
+import com.caneseeproject.bluetooth.BluetoothPortal
 import com.caneseeproject.obstacledetection.ODInput
 import com.caneseeproject.obstacledetection.ObstacleDetector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -20,14 +21,13 @@ import kotlin.coroutines.CoroutineContext
  */
 class CaneSeeService : Service(), CoroutineScope {
 
-    private val background: Job = Job()
     private val main = CoroutineScope(Dispatchers.Main)
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
 
-    private val cane: ObstacleDetector by lazy<ObstacleDetector> { TODO() }
-    private val glasses: ComputerVision by lazy<ComputerVision> { TODO() }
+    private val cane: ObstacleDetector by lazy { ObstacleDetector.create(BluetoothPortal(CANE_MAC)) }
+    private val glasses: ComputerVision by lazy { ComputerVision.create(BluetoothPortal(GLASSES_MAC)) }
 
 
     fun activateGlasses() {
