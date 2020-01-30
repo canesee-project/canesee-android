@@ -11,9 +11,9 @@ const val GLASSES_MAC = "B8:27:EB:B4:73:E9"
 
 
 fun Any.debug(what: String) {
-    Log.d(javaClass.simpleName, what)
+    Log.d("CANE SEEEEEEEE", what)
 }
 
 fun Any.wtf(what: String) {
-    Log.wtf(javaClass.simpleName, what)
+    Log.wtf("CAN'T SEEEEEEEE", what)
 }
