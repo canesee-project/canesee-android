@@ -14,10 +14,10 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         cv = cvPortal.connect()
     }
 
-    private fun cvTokenize(rawData: String): Vision {
+    private fun cvTokenize(rawData: String): Vision? {
         return when {
             rawData.startsWith('1') -> Vision.OCR(rawData)
-            else -> throw Exception("the russians did it for cv !")
+            else -> null // (corrupt reading, discard.) the russians did it for cv !
         }
     }
 

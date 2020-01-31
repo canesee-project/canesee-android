@@ -17,7 +17,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
     /**
      * Tokenizer to convert the reading received from the cane into a high level data
      */
-    private fun odReadingTokenizer(sensorRawReading: String): ODReading {
+    private fun odReadingTokenizer(sensorRawReading: String): ODReading? {
         return when {
             //assume for this case the format is: 0_3
             sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
@@ -30,7 +30,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
             )
 
             //TODO: other cases.
-            else -> throw Exception("possibly corrupt reading.")
+            else -> null //possibly corrupt reading.
         }
     }
 
