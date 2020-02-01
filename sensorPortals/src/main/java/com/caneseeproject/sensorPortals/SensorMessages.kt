@@ -11,8 +11,9 @@ package com.caneseeproject.sensorPortals
 interface SensorReading
 /**
  * converts the sensor's reading from its raw form to a project-defined higher-level object.
+ * Might return null in case of corrupt reading.
  */
-typealias ReadingTokenizer<T> = (rawReading: String) -> T
+typealias ReadingTokenizer<T> = (rawReading: String) -> T?
 
 /**
  * Dummy SensorReading for tests and simple readings.
