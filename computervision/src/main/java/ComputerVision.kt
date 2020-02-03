@@ -1,18 +1,15 @@
 package com.caneseeaproject.computervision
 
+import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorInput
 import com.caneseeproject.sensorPortals.SensorPortal
 import com.caneseeproject.sensorPortals.SensorReading
 import kotlinx.coroutines.flow.Flow
 
 
-interface ComputerVision {
-
-    fun activate()
+interface ComputerVision : Sensor<CVInput, Vision> {
 
     fun visions(): Flow<Vision>
-
-    suspend fun setMode(mode: CVInput) //app change mode of glasses
 
     companion object Factory {
         fun create(sensorPortal: SensorPortal): ComputerVision =

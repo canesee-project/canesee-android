@@ -6,27 +6,24 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 
 
-internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : ObstacleDetector {
-
-    private lateinit var cane: Sensor
-
-    override fun activate() {
-        cane = odPortal.connect()
+internal class ObstacleDetectorImpl(override val portal: SensorPortal) : ObstacleDetector {
+    override suspend fun control(vararg signals: ODInput) {
+        (this as Sensor<ODInput, ODReading>).control(*signals)
     }
 
     /**
      * Tokenizer to convert the reading received from the cane into a high level data
      */
-    private fun odReadingTokenizer(sensorRawReading: String): ODReading? {
+    override fun tokenize(raw: String): ODReading? {
         return when {
             //assume for this case the format is: 0_3
-            sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
-                sensorRawReading[2].toFloat()
+            raw.startsWith('0') -> ODReading.ObstacleDistance(
+                raw[2].toFloat()
             )
 
             //assume for this case the format is: 1_3
-            sensorRawReading.startsWith('1') -> ODReading.GlassesMode(
-                sensorRawReading[2].toInt()
+            raw.startsWith('1') -> ODReading.GlassesMode(
+                raw[2].toInt()
             )
 
             //TODO: other cases.
@@ -37,9 +34,9 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
     /**
      * Encoder to convert the high level data into a form of a string
      */
-    private fun odInputEncoder(highLevelInput: ODInput): String {
-        return when (highLevelInput) {
-            is ODInput.RangeControl -> "${highLevelInput.percentage}"
+    override fun encode(signal: ODInput): String {
+        return when (signal) {
+            is ODInput.RangeControl -> "${signal.percentage}"
             // TODO: other cases
         }
     }
@@ -48,13 +45,5 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
      * Get data from the cane
      */
     override fun detectObstacles(): Flow<ODReading.ObstacleDistance> =
-        cane.readings(::odReadingTokenizer)
-            .filterIsInstance()
-
-    /**
-     * Send data into the cane (set the cane)
-     */
-    override suspend fun control(what: ODInput) {
-        cane.send(::odInputEncoder, what)
-    }
+        readings().filterIsInstance()
 }

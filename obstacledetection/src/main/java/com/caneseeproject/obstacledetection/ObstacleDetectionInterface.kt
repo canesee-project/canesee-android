@@ -1,5 +1,6 @@
 package com.caneseeproject.obstacledetection
 
+import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorInput
 import com.caneseeproject.sensorPortals.SensorPortal
 import com.caneseeproject.sensorPortals.SensorReading
@@ -23,22 +24,12 @@ sealed class ODInput : SensorInput {
 
 }
 
-interface ObstacleDetector {
-
-    /**
-     * Connecting with this cane
-     */
-    fun activate()
+interface ObstacleDetector : Sensor<ODInput, ODReading> {
 
     /**
      * Provides flow of high level sensor readings
      */
     fun detectObstacles(): Flow<ODReading.ObstacleDistance>
-
-    /**
-     * Change the cane settings
-     */
-    suspend fun control(what: ODInput)
 
     companion object Factory {
         fun create(portal: SensorPortal): ObstacleDetector = ObstacleDetectorImpl(portal)

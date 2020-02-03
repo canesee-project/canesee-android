@@ -18,19 +18,22 @@ import org.junit.Test
 class SensorsTest {
 
     companion object {
-        lateinit var sensor: Sensor
+        lateinit var portal: SensorPortal
+        lateinit var sensor: Sensor<StringInput, StringReading>
 
         @BeforeClass
         @JvmStatic
         fun initTest() {
-            sensor = MockSensorPortal().connect()
+            portal = EchoSensorPortal()
+            sensor = MockSensor(portal)
+            sensor.activate()
         }
     }
 
 
     @Test
     fun testSensorConnection() {
-        assert(sensor.isActive)
+        assert(portal.isActive)
     }
 
     @Test
@@ -38,18 +41,18 @@ class SensorsTest {
         runBlocking {
 
             launch {
-                sensor.readings(mockTokenize).take(2)
+                sensor.readings().take(2)
                     .filterIsInstance<StringReading>()
                     .map { it.value }
                     .reduce { acc, s -> acc + s }
                     .also { println(it); assert(it == "Hello World") }
             }
 
-            sensor.send(mockEncode, "Hello".toInput(), " World".toInput())
+            sensor.control("Hello".toInput(), " World".toInput())
 
             delay(2000)
-            sensor.shutdown()
-            assert(sensor.isActive.not())
+            portal.shutdown()
+            assert(portal.isActive.not())
         }
     }
 }
