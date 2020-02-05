@@ -22,9 +22,16 @@ interface ComputerVision {
 
 sealed class Vision : SensorReading {
     class OCR(val transcript: String) : Vision()
+    class Scenery(val scene: String) : Vision()
+    class Facial (val prettyFace: String) : Vision()
+    class Emotion (val emotion: String) : Vision()
+    class ObjectDetection (val objects: List<Any>): Vision()
 }
 
 sealed class CVInput : SensorInput {
     class ModeChange(val mode: Int) : CVInput()
+
+
+
 
 }
