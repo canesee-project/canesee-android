@@ -4,6 +4,7 @@ import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
+import org.json.JSONObject
 
 
 internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : ComputerVision {
@@ -14,23 +15,24 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         cv = cvPortal.connect()
     }
 
-    private fun cvTokenize(rawData: List<Any>): Vision? {
-        val raw : String = rawData[0].toString()
-        return when {
+    private fun cvTokenize(rawData: String): Vision? {
+        val raw = JSONObject(rawData)
+        return when (raw.getInt("type") == 1) {
 
-            raw.startsWith('1') -> Vision.OCR(raw)
-            raw.startsWith('2') -> Vision.Scenery(raw)
-            raw.startsWith('3') -> Vision.Facial(raw)
-            raw.startsWith('4') -> Vision.Emotion(raw)
-            raw.startsWith('5') -> Vision.ObjectDetection(rawData)
+            raw.has("value") -> Vision.OCR(raw.optString("value"))
+            raw.has("value") -> Vision.Scenery(raw.optString("value"))
+            raw.has("value") -> Vision.Facial(raw.optString("value"))
+            raw.has("value") -> Vision.Emotion(raw.optString("value"))
+            raw.has("value") -> Vision.ObjectDetection(raw.optJSONArray("value"))
             else -> null // (corrupt reading, discard.) the russians did it for cv !
         }
     }
 
     private fun cvEncode(processed: CVInput): String {
+
         return when (processed) {
             is CVInput.ModeChange -> {
-                "${processed.mode}"
+                "${processed.mode.optInt("value")}"
             }
 
         }
@@ -38,7 +40,7 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
 
     override fun visions(): Flow<Vision> {
         return cv.readings(::cvTokenize).filterIsInstance()
-        //locally changed argument of //typealias ReadingTokenizer<T> = (rawReading: List<Any>) -> T?// in SensorMessages
+
     }
 
 
@@ -46,5 +48,3 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         cv.send(::cvEncode, mode)
     }
 }
-
-
