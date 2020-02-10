@@ -3,6 +3,7 @@ package com.caneseeproject.tts
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.*
+import com.caneseeproject.sensorPortals.SensorReading
 
 interface TexrToSpeechInterface {
     fun onInit(status: Int)
@@ -40,5 +41,5 @@ class TextToSpeachClass : TexrToSpeechInterface {
 sealed class NotificationsType{
     class AppMessage : NotificationsType()
     class SensorControl : NotificationsType()
-    class SensorOutput (val textualResult: Objects) : NotificationsType()
+    class SensorOutput (val textualResult: SensorReading) : NotificationsType()
 }
