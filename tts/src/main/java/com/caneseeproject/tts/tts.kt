@@ -6,15 +6,12 @@ import java.util.*
 
 interface TexrToSpeechInterface {
     fun onInit(status: Int)
-    fun speakOut(text: Int)
-   // fun onDestroy()
+    fun speakOut(text: String)
 }
 
 class TextToSpeachClass : TexrToSpeechInterface {
     var ttst: TextToSpeech? = null
-
     override fun onInit(status: Int) {
-
         if (status == TextToSpeech.SUCCESS) {
             // set US English as language for tts
             val result = ttst!!.setLanguage(Locale.US)
@@ -26,15 +23,22 @@ class TextToSpeachClass : TexrToSpeechInterface {
             Log.e("TTS", "Initilization Failed!")
         }
     }
-    override fun speakOut(text: Int) {
+    override fun speakOut(text: String) {
         //tts function implementation
         val textString = text.toString()
         ttst!!.speak(textString, TextToSpeech.QUEUE_FLUSH, null);
     }
-    /* override fun onDestroy() {
-        if (ttst != null) {
-            ttst!!.stop()
-            ttst!!.shutdown()
+
+    fun notify(RecentNotification: NotificationsType) =
+        when (RecentNotification) {
+            is NotificationsType.AppMessage -> speakOut("connection is established")
+            is NotificationsType.SensorControl -> speakOut("OCR is activated")
+            is NotificationsType.SensorOutput -> println("bla bla bla .....")
         }
-    }*/
+}
+
+sealed class NotificationsType{
+    class AppMessage : NotificationsType()
+    class SensorControl : NotificationsType()
+    class SensorOutput (val textualResult: Objects) : NotificationsType()
 }
