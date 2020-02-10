@@ -4,6 +4,7 @@ import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
+import org.json.JSONException
 import org.json.JSONObject
 
 
@@ -16,23 +17,28 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
     }
 
     private fun cvTokenize(rawData: String): Vision? {
-        val raw = JSONObject(rawData)
-        return when (raw.getInt("type") == 1) {
+        try {
+            val raw = JSONObject(rawData)
+            val list: List<Any> = listOf<Any>(raw.getJSONArray("value")) //[[......]]
 
-            raw.has("value") -> Vision.OCR(raw.optString("value"))
-            raw.has("value") -> Vision.Scenery(raw.optString("value"))
-            raw.has("value") -> Vision.Facial(raw.optString("value"))
-            raw.has("value") -> Vision.Emotion(raw.optString("value"))
-            raw.has("value") -> Vision.ObjectDetection(raw.optJSONArray("value"))
-            else -> null // (corrupt reading, discard.) the russians did it for cv !
+            return when (raw.getInt("type")) {
+                OCR -> Vision.OCR(raw.getString("value"))
+                scenes -> Vision.Scenery(raw.getString("value"))
+                prettyFaces -> Vision.Facial(raw.getString("value"))
+                emotions -> Vision.Emotion(raw.getString("value"))
+                objects -> Vision.ObjectDetection(list)
+                else -> null // (corrupt reading, discard.) the russians did it for cv !
+            }
+        }catch(e: JSONException){
+            return null
         }
     }
 
     private fun cvEncode(processed: CVInput): String {
-
         return when (processed) {
             is CVInput.ModeChange -> {
-                "${processed.mode.optInt("value")}"
+                    "${processed.mode}"
+
             }
 
         }
