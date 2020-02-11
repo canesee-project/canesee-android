@@ -11,11 +11,11 @@ interface TexrToSpeechInterface {
 }
 
 class TextToSpeachClass : TexrToSpeechInterface {
-    var ttst: TextToSpeech? = null
+    var tts: TextToSpeech? = null
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             // set US English as language for tts
-            val result = ttst!!.setLanguage(Locale.US)
+            val result = tts!!.setLanguage(Locale.US)
 
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS","The Language specified is not supported!")
@@ -27,19 +27,19 @@ class TextToSpeachClass : TexrToSpeechInterface {
     override fun speakOut(text: String) {
         //tts function implementation
         val textString = text.toString()
-        ttst!!.speak(textString, TextToSpeech.QUEUE_FLUSH, null);
+        tts!!.speak(textString, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    fun notify(RecentNotification: NotificationsType) =
+    fun notify(RecentNotification: NotificationType) =
         when (RecentNotification) {
-            is NotificationsType.AppMessage -> speakOut("connection is established")
-            is NotificationsType.SensorControl -> speakOut("OCR is activated")
-            is NotificationsType.SensorOutput -> println("bla bla bla .....")
+            is NotificationType.AppMessage -> speakOut("connection is established")
+            is NotificationType.SensorControl -> speakOut("OCR is activated")
+            is NotificationType.SensorOutput -> println("bla bla bla .....")
         }
 }
 
-sealed class NotificationsType{
-    class AppMessage : NotificationsType()
-    class SensorControl : NotificationsType()
-    class SensorOutput (val textualResult: SensorReading) : NotificationsType()
+sealed class NotificationType{
+    class AppMessage : NotificationType()
+    class SensorControl : NotificationType()
+    class SensorOutput (val textualResult: SensorReading) : NotificationType()
 }
