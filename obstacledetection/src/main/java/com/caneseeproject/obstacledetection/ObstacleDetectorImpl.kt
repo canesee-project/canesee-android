@@ -18,15 +18,18 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
      * Tokenizer to convert the reading received from the cane into a high level data
      */
     private fun odReadingTokenizer(sensorRawReading: String): ODReading? {
+
+        val readingValue = sensorRawReading.drop(2)
+
         return when {
             //assume for this case the format is: 0_3
             sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
-                sensorRawReading[2].toFloat()
+                readingValue.toFloat()
             )
 
             //assume for this case the format is: 1_3
             sensorRawReading.startsWith('1') -> ODReading.GlassesMode(
-                sensorRawReading[2].toInt()
+                readingValue.toInt()
             )
 
             //TODO: other cases.
