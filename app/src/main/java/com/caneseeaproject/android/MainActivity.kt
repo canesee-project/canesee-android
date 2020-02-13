@@ -7,7 +7,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
-import com.caneseeaproject.computervision.CVInput
+import com.caneseeaproject.computervision.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +36,14 @@ class MainActivity : AppCompatActivity() {
 
     fun activateDevices() {
         caneSee.activateGlasses()
-        caneSee.controlGlasses(CVInput.ModeChange(88))
+        while (true) {
+            caneSee.controlGlasses(CVInput.ModeChange(OCR))
+            caneSee.controlGlasses(CVInput.ModeChange(SCENES))
+            caneSee.controlGlasses(CVInput.ModeChange(PRETTY_FACES))
+            caneSee.controlGlasses(CVInput.ModeChange(EMOTIONS))
+            caneSee.controlGlasses(CVInput.ModeChange(OBJECTS))
+//            caneSee.activateCane()
+        }
     }
 
     override fun onDestroy() {
