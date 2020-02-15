@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.Flow
 
 sealed class ODReading : SensorReading {
 
+    //Represented with a '0' -> 0_distance
     class ObstacleDistance(val distance: Float) : ODReading()
 
+    //Represented with a '1' -> 1_mode
     class GlassesMode(val mode: Int) : ODReading()
 
     //TODO any other type of reading
