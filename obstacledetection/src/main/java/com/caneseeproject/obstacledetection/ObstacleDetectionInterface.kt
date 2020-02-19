@@ -19,6 +19,7 @@ sealed class ODReading : SensorReading {
 
 sealed class ODInput : SensorInput {
 
+    //Represented as percentage number
     class RangeControl(val percentage: Int) : ODInput()
 
     //TODO any other type of input
