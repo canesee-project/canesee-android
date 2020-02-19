@@ -3,7 +3,7 @@
 This module is responsible for the interaction with the device that the user will hold for interacting
 with the outer world (in this case it is a cane).
 
-##How this module works
+##How this module works##
 
 Mainly, this module is all about an interface called "ObstacleDetector" drawing the lines that anyone
 who's interested to listen anything from "the cane". On the other side, this module also has a class
