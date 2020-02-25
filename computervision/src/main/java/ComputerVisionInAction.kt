@@ -25,7 +25,7 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
                 SCENES -> Vision.Scenery(raw.getString("value"))
                 PRETTY_FACES -> Vision.Facial(raw.getString("value"))
                 EMOTIONS -> Vision.Emotion(raw.getString("value"))
-                OBJECTS -> Vision.ObjectDetection(listOf<Any>(raw.getJSONArray("value"))) //[[......]])
+                OBJECTS -> Vision.ObjectDetection(listOf<String>(raw.getString("value"))) //[[......]])
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
         }catch(e: JSONException){
