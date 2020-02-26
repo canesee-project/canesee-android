@@ -16,16 +16,22 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         cv = cvPortal.connect()
     }
 
+
+
     private fun cvTokenize(rawData: String): Vision? {
         try {
             val raw = JSONObject(rawData)
+
 
             return when (raw.getInt("type")) {
                 OCR -> Vision.OCR(raw.getString("value"))
                 SCENES -> Vision.Scenery(raw.getString("value"))
                 PRETTY_FACES -> Vision.Facial(raw.getString("value"))
                 EMOTIONS -> Vision.Emotion(raw.getString("value"))
-                OBJECTS -> Vision.ObjectDetection(listOf<String>(raw.getString("value"))) //[[......]])
+                OBJECTS ->Vision.ObjectDetection(((0 until raw.getJSONArray("values").length()).map {
+                    DetectedObject(raw.getJSONArray("values").getJSONObject(it).getString("label"),
+                        raw.getJSONArray("values").getJSONObject(it).getString("pos") )}))
+
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
         }catch(e: JSONException){
