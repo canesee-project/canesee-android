@@ -27,13 +27,13 @@ sealed class Vision : SensorReading {
     class Scenery(val scene: String) : Vision()
     class Facial (val prettyFace: String) : Vision()
     class Emotion (val emotion: String) : Vision()
-    class ObjectDetection (val objects: List<String>): Vision()
+    class ObjectDetection (val objects: List<DetectedObject>): Vision()
 }
 
 sealed class CVInput : SensorInput {
     class ModeChange(val mode: Int) : CVInput()
-
-
-
-
 }
+
+data class DetectedObject(val lbl:String, val pos:String)
+
+
