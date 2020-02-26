@@ -4,6 +4,7 @@ import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -21,16 +22,19 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
     private fun cvTokenize(rawData: String): Vision? {
         try {
             val raw = JSONObject(rawData)
-
+            lateinit var JArray: JSONArray
+            if(raw.getInt("type") == OBJECTS){
+                JArray = raw.getJSONArray("value")
+                        }
 
             return when (raw.getInt("type")) {
                 OCR -> Vision.OCR(raw.getString("value"))
                 SCENES -> Vision.Scenery(raw.getString("value"))
                 PRETTY_FACES -> Vision.Facial(raw.getString("value"))
                 EMOTIONS -> Vision.Emotion(raw.getString("value"))
-                OBJECTS ->Vision.ObjectDetection(((0 until raw.getJSONArray("values").length()).map {
-                    DetectedObject(raw.getJSONArray("values").getJSONObject(it).getString("label"),
-                        raw.getJSONArray("values").getJSONObject(it).getString("pos") )}))
+                OBJECTS ->Vision.ObjectDetection(((0 until JArray.length()).map {
+                    DetectedObject(JArray.getJSONObject(it).getString("label"),
+                        JArray.getJSONObject(it).getString("pos") )}))
 
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
