@@ -1,10 +1,10 @@
 package com.caneseeaproject.computervision
 
+import android.util.Log
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -38,7 +38,8 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
 
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
-        }catch(e: JSONException){
+        } catch (e: JSONException) {
+            Log.e("CV_TOKENIZE", e.localizedMessage)
             return null
         }
     }
