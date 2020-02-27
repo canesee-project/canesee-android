@@ -15,5 +15,5 @@ fun Any.debug(what: String) {
 }
 
 fun Any.wtf(what: String) {
-    Log.wtf("CAN'T SEEEEEEEE", what)
+    Log.e("CAN'T SEEEEEEEE", what)
 }
