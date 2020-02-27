@@ -17,25 +17,23 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         cv = cvPortal.connect()
     }
 
-
-
     private fun cvTokenize(rawData: String): Vision? {
         try {
             val raw = JSONObject(rawData)
-            lateinit var JArray: JSONArray
-            if(raw.getInt("type") == OBJECTS){
-                JArray = raw.getJSONArray("value")
-                        }
 
             return when (raw.getInt("type")) {
                 OCR -> Vision.OCR(raw.getString("value"))
                 SCENES -> Vision.Scenery(raw.getString("value"))
                 PRETTY_FACES -> Vision.Facial(raw.getString("value"))
                 EMOTIONS -> Vision.Emotion(raw.getString("value"))
-                OBJECTS ->Vision.ObjectDetection(((0 until JArray.length()).map {
-                    DetectedObject(JArray.getJSONObject(it).getString("label"),
-                        JArray.getJSONObject(it).getString("pos") )}))
-
+                OBJECTS -> raw.getJSONArray("value").run {
+                    Vision.ObjectDetection(((0 until length()).map {
+                        DetectedObject(
+                            getJSONObject(it).getString("label"),
+                            getJSONObject(it).getString("pos")
+                        )
+                    }))
+                }
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
         } catch (e: JSONException) {
@@ -46,11 +44,7 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
 
     private fun cvEncode(processed: CVInput): String {
         return when (processed) {
-            is CVInput.ModeChange -> {
-                    "0_${processed.mode}"
-
-            }
-
+            is CVInput.ModeChange -> "0_${processed.mode}"
         }
     }
 
@@ -58,7 +52,6 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         return cv.readings(::cvTokenize).filterIsInstance()
 
     }
-
 
     override suspend fun setMode(mode: CVInput) {
         cv.send(::cvEncode, mode)
