@@ -33,9 +33,9 @@ class TextToSpeachClass : TextToSpeechInterface {
             Device.Glasses -> when (recent) {
                 is NotificationType.SensorNotification -> when (glassesMode) {
                     is Vision.OCR -> speakOut("OCR is activated")
-                    is Vision.Facial -> speakOut("Facial recognition is turned on")
-                    is Vision.Emotion -> speakOut("Emotion Detection is turned on")
-                    is Vision.ObjectDetection -> speakOut("Objected detection is turned on")
+                    is Vision.Facial -> speakOut("face recognition is turned on")
+                    is Vision.Emotion -> speakOut("Emotion recognition is turned on")
+                    is Vision.ObjectDetection -> speakOut("Object detection is turned on")
                     is Vision.Scenery -> speakOut("Scene Description is turned on ")
                 }
                 is NotificationType.SensorContent -> when (glassesMode) {
@@ -51,7 +51,7 @@ class TextToSpeachClass : TextToSpeechInterface {
 //              Cane
             Device.Cane -> when (recent) {
                 is NotificationType.SensorNotification -> when (obstacleMode) {
-                    is ODReading.ObstacleDistance -> speakOut(" obstacle Distance is turned on")
+                    is ODReading.ObstacleDistance -> speakOut("Cane Distance is turned on")
                 }
                 is NotificationType.SensorContent -> when (obstacleMode) {
                     is ODReading.ObstacleDistance -> speakOut(obstacleMode.distance.toString())
