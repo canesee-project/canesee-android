@@ -4,42 +4,71 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.*
 import com.caneseeproject.sensorPortals.SensorReading
+import com.caneseeproject.sensorPortals.SensorInput
+import com.caneseeproject.obstacledetection.*
+import com.caneseeaproject.computervision.*
 
-interface TexrToSpeechInterface {
-    fun onInit(status: Int)
+
+interface TextToSpeechInterface {
     fun speakOut(text: String)
 }
 
-class TextToSpeachClass : TexrToSpeechInterface {
+class TextToSpeachClass : TextToSpeechInterface {
     var tts: TextToSpeech? = null
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            // set US English as language for tts
-            val result = tts!!.setLanguage(Locale.US)
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS","The Language specified is not supported!")
-            }
-        } else {
-            Log.e("TTS", "Initilization Failed!")
-        }
-    }
+    //    tts fun
     override fun speakOut(text: String) {
         //tts function implementation
-        val textString = text.toString()
-        tts!!.speak(textString, TextToSpeech.QUEUE_FLUSH, null);
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    fun notify(RecentNotification: NotificationType) =
-        when (RecentNotification) {
-            is NotificationType.AppMessage -> speakOut("connection is established")
-            is NotificationType.SensorControl -> speakOut("OCR is activated")
-            is NotificationType.SensorOutput -> println("bla bla bla .....")
-        }
-}
+    fun notify(
+        input: Device,
+        recent: NotificationType,
+        glassesMode: Vision,
+        obstacleMode: ODReading
+    ) {
+        when (input) {
 
+//              Glasses
+            Device.Glasses -> when (recent) {
+                is NotificationType.SensorNotification -> when (glassesMode) {
+                    is Vision.OCR -> speakOut("OCR is activated")
+                    is Vision.Facial -> speakOut("Facial recognition is turned on")
+                    is Vision.Emotion -> speakOut("Emotion Detection is turned on")
+                    is Vision.ObjectDetection -> speakOut("Objected detection is turned on")
+                    is Vision.Scenery -> speakOut("Scene Description is turned on ")
+                }
+                is NotificationType.SensorContent -> when (glassesMode) {
+                    is Vision.OCR -> speakOut(glassesMode.transcript)
+                    is Vision.Facial -> speakOut(glassesMode.prettyFace)
+                    is Vision.Emotion -> speakOut(glassesMode.emotion)
+                    is Vision.ObjectDetection -> speakOut(glassesMode.objects.toString())
+                    is Vision.Scenery -> speakOut(glassesMode.scene)
+                }
+                is NotificationType.AppMessage -> speakOut("glasses connection is established")
+            }
+
+//              Cane
+            Device.Cane -> when (recent) {
+                is NotificationType.SensorNotification -> when (obstacleMode) {
+                    is ODReading.ObstacleDistance -> speakOut(" obstacle Distance is turned on")
+                }
+                is NotificationType.SensorContent -> when (obstacleMode) {
+                    is ODReading.ObstacleDistance -> speakOut(obstacleMode.distance.toString())
+
+                }
+                is NotificationType.AppMessage -> speakOut("Cane connection is established")
+            }
+        }
+    }
+}
 sealed class NotificationType{
-    class AppMessage : NotificationType()
-    class SensorControl : NotificationType()
-    class SensorOutput (val textualResult: SensorReading) : NotificationType()
+
+    class AppMessage :NotificationType()
+    class SensorNotification(val textInput :SensorInput) :NotificationType()
+    class SensorContent(val textReading :SensorReading) :NotificationType()
+}
+enum class Device {
+    Glasses,
+    Cane
 }
