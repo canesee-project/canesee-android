@@ -42,7 +42,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
      */
     private fun odInputEncoder(highLevelInput: ODInput): String {
         return when (highLevelInput) {
-            is ODInput.RangeControl -> "${highLevelInput.percentage}"
+            is ODInput.RangeControl -> "2_${highLevelInput.percentage}"
             // TODO: other cases
         }
     }
