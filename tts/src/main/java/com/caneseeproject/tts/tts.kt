@@ -2,8 +2,7 @@ package com.caneseeproject.tts
 
 import android.speech.tts.TextToSpeech
 import com.caneseeaproject.computervision.*
-import com.caneseeproject.obstacledetection.ODInput
-import com.caneseeproject.obstacledetection.ODReading
+import com.caneseeproject.obstacledetection.*
 import com.caneseeproject.sensorPortals.*
 
 interface TextToSpeechInterface {
