@@ -21,11 +21,12 @@ class TextToSpeachClass : TextToSpeechInterface {
         when (recent) {
             is NotificationType.SensorNotification -> when (recent.state) {
                 is CVInput.ModeChange -> when (recent.state.mode){
-                    is 1 -> speakOut("OCR is Activated now")
-                    is 2 -> speakOut("face recognition is turned on")
-                    is 3 -> speakOut("emotion recognition is turned on")
-                    is 4 -> speakOut("object detection is turned on")
-                    is 5 -> speakOut("scene Description")
+                    1 -> speakOut("OCR is Activated now")
+                    2 -> speakOut("scene Description")
+                    3 -> speakOut("face recognition is turned on")
+                    4 -> speakOut("emotion recognition is turned on")
+                    5 -> speakOut("object detection is turned on")
+                    else -> speakOut("Please, Enter a number from 1 to 5")
                 }
                 is ODInput.RangeControl -> speakOut("Distance Detection is turned on")
             }
@@ -44,7 +45,7 @@ class TextToSpeachClass : TextToSpeechInterface {
     }
 }
 sealed class NotificationType{
-    class AppMessage(val appTutorial:String) :NotificationType()
-    class SensorNotification(val state :SensorInput) :NotificationType()
-    class SensorContent(val context :SensorReading) :NotificationType()
+    class AppMessage ( val appTutorial:String ) : NotificationType()
+    class SensorNotification ( val state :SensorInput ) : NotificationType()
+    class SensorContent ( val context :SensorReading ) : NotificationType()
 }
