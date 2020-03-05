@@ -13,8 +13,7 @@ class TextToSpeachClass : TextToSpeechInterface {
     var tts: TextToSpeech? = null
     //    tts fun
     private fun speakOut(text: String) {
-        //tts function implementation
-        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null)
+        tts.speak(text, TextToSpeech.QUEUE_ADD, null)
     }
 
     override fun notify ( recent : NotificationType ) {
