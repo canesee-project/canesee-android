@@ -9,7 +9,13 @@ import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import com.caneseeaproject.computervision.*
 
+
+
 class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
 
     private lateinit var caneSee: CaneSeeService
     private val serviceConnection = object : ServiceConnection {
