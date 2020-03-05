@@ -13,9 +13,12 @@ interface CaneSeeVoice {
     fun start(onReady: (status: Int) -> Unit)
     fun whisper(secret: Whisper)
 
+    companion object Factory {
+        fun create(context: Context): CaneSeeVoice = CaneSeeVoiceImpl(context)
+    }
 }
 
-class CaneSeeVoiceImpl(
+internal class CaneSeeVoiceImpl(
     private val context: Context
 ) : CaneSeeVoice {
 
