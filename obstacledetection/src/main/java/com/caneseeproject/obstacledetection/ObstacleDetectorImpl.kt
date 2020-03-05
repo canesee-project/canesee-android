@@ -23,12 +23,12 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
 
         return when {
             //assume for this case the format is: 0_3
-            sensorRawReading.startsWith('0') -> ODReading.ObstacleDistance(
+            sensorRawReading.startsWith("${OBSTACLE_DISTANCE}") -> ODReading.ObstacleDistance(
                 readingValue.toFloat()
             )
 
             //assume for this case the format is: 1_3
-            sensorRawReading.startsWith('1') -> ODReading.GlassesMode(
+            sensorRawReading.startsWith("${GLASSES_MODE}") -> ODReading.GlassesMode(
                 readingValue.toInt()
             )
 
@@ -42,7 +42,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal) : Obstac
      */
     private fun odInputEncoder(highLevelInput: ODInput): String {
         return when (highLevelInput) {
-            is ODInput.RangeControl -> "${highLevelInput.percentage}"
+            is ODInput.RangeControl -> "${RANGE_PERCENTAGE}" + "_" + "${highLevelInput.percentage}"
             // TODO: other cases
         }
     }

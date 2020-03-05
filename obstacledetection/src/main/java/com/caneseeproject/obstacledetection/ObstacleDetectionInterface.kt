@@ -5,6 +5,13 @@ import com.caneseeproject.sensorPortals.SensorPortal
 import com.caneseeproject.sensorPortals.SensorReading
 import kotlinx.coroutines.flow.Flow
 
+//ODReading Constants :
+const val OBSTACLE_DISTANCE: Int = 0
+const val GLASSES_MODE: Int = 1
+
+//ODInput Constants :
+const val RANGE_PERCENTAGE: Int = 0
+
 
 sealed class ODReading : SensorReading {
 
@@ -19,7 +26,7 @@ sealed class ODReading : SensorReading {
 
 sealed class ODInput : SensorInput {
 
-    //Represented as percentage number
+    //Represented with a '0' -> 0_percentage
     class RangeControl(val percentage: Int) : ODInput()
 
     //TODO any other type of input
