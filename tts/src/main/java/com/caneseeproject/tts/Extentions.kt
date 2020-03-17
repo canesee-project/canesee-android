@@ -1,6 +1,6 @@
 package com.caneseeproject.tts
 
-import com.caneseeproject.sensorPortals.SensorInput
+import com.caneseeproject.sensorPortals.SensorControl
 import com.caneseeproject.sensorPortals.SensorReading
 
 /**
@@ -10,6 +10,6 @@ import com.caneseeproject.sensorPortals.SensorReading
 
 fun SensorReading.toWhisper() = Whisper.ReadingWhisper(this)
 
-fun SensorInput.toWhisper() = Whisper.ControlWhisper(this)
+fun SensorControl.toWhisper() = Whisper.ControlWhisper(this)
 
 fun String.toWhisper() = Whisper.AppWhisper(this)

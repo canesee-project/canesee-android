@@ -7,12 +7,32 @@ import kotlinx.coroutines.flow.Flow
  * Provides a connection to a sensor. Be it from a Bluetooth or a TCP connection.
  * @author mhashim6 on 2019-12-08
  */
-interface SensorPortal {
+interface SensorPortal<R : SensorReading, C : SensorControl> {
 
     /**
-     * Opens a connection portal to this sensor.
+     * Opens the portal.
      */
-    fun connect(): Sensor
+    fun open()
+
+    /**
+     * Send a message through the portal.
+     */
+    suspend fun send(vararg messages: String)
+
+    /**
+     * receive a flow of messages through the portal.
+     */
+    fun receive(): Flow<String>
+
+    /**
+     * Indicates whether the portal is open or not.
+     */
+    val isOpen: Boolean
+
+    /**
+     * Shuts down the portal.
+     */
+    fun shutdown()
 }
 
 
@@ -21,25 +41,15 @@ interface SensorPortal {
  * whether they are remote or local.
  * @author mhashim6 on 2019-12-08
  */
-interface Sensor {
+interface Sensor<R : SensorReading, C : SensorControl> {
 
     /**
      * Send a message to this sensor, after encoding it with the provided encoder.
      */
-    suspend fun <T : SensorInput> send(encode: InputEncoder<T>, vararg messages: T)
+    suspend fun send(vararg messages: C)
 
     /**
      * Receive readings from this sensor, after tokenize-ing them with the provided tokenizer.
      */
-    fun <T : SensorReading> readings(tokenize: ReadingTokenizer<T>): Flow<T>
-
-    /**
-     * Indicates whether [shutdown] has been called or not.
-     */
-    val isActive: Boolean
-
-    /**
-     * Shutdowns the connection.
-     */
-    fun shutdown()
+    fun readings(): Flow<R>
 }

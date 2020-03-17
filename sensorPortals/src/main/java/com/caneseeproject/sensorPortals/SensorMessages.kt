@@ -9,11 +9,6 @@ package com.caneseeproject.sensorPortals
  * Abstracts a sensor reading, meant to be implemented to define different types of readings.
  */
 interface SensorReading
-/**
- * converts the sensor's reading from its raw form to a project-defined higher-level object.
- * Might return null in case of corrupt reading.
- */
-typealias ReadingTokenizer<T> = (rawReading: String) -> T?
 
 /**
  * Dummy SensorReading for tests and simple readings.
@@ -23,14 +18,10 @@ class StringReading(val value: String) : SensorReading
 /**
  * Abstracts a sensor input, meant to be implemented to define different types of inputs.
  */
-interface SensorInput
-/**
- * converts a project-defined higher-level input to a raw input, suitable for sending over a portal.
- */
-typealias InputEncoder<T> = (encodedReading: T) -> String
+interface SensorControl
 
-class StringInput(val value: String) : SensorInput
-class IntInput(val value: Int) : SensorInput
+class StringControl(val value: String) : SensorControl
+class IntControl(val value: Int) : SensorControl
 
-fun String.toInput() = StringInput(this)
-fun Int.toInput() = IntInput(this)
+fun String.toControl() = StringControl(this)
+fun Int.toControl() = IntControl(this)
