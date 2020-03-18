@@ -1,24 +1,46 @@
 package com.caneseeaproject.computervision
 
 import android.util.Log
+import com.caneseeproject.sensorPortals.PortalTranslator
 import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
 
-internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : ComputerVision {
+internal class ComputerVisionInAction(private val cvPortal: SensorPortal<Vision, CVInput>,
+                                       private val cvTranslator: CVTranslator) : ComputerVision {
 
-    private lateinit var cv: Sensor
 
     override fun activate() {
-        cv = cvPortal.connect()
+        cvPortal.open()
     }
 
-    private fun cvTokenize(rawData: String): Vision? {
+    override suspend fun send(vararg modes: CVInput) {
+        cvPortal.send(*(modes.map { cvTranslator.pack(it) }.toTypedArray()))
+    }
+
+    override fun readings(): Flow<Vision> =
+        cvPortal.receive().map { cvTranslator.tokenize(it) }.filterNotNull()
+
+    override fun visions(): Flow<Vision> {
+        return readings()
+
+    }
+
+    override suspend fun setMode(mode: CVInput) {
+        send(mode)
+    }
+
+}
+
+class CVTranslator : PortalTranslator<Vision, CVInput> {
+    override fun tokenize(rawData: String): Vision? {
         try {
             val raw = JSONObject(rawData)
 
@@ -44,17 +66,14 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal) : Comp
         }
     }
 
-    private fun cvEncode(processed: CVInput): String {
+    override fun pack(processed: CVInput): String {
         return when (processed) {
             is CVInput.ModeChange -> "0_${processed.mode}"
         }
     }
 
-    override fun visions(): Flow<Vision> {
-        return cv.readings(::cvTokenize).filterIsInstance()
     }
 
-    override suspend fun setMode(mode: CVInput) {
-        cv.send(::cvEncode, mode)
-    }
-}
+
+
+

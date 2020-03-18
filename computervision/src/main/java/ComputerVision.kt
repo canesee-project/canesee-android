@@ -1,14 +1,12 @@
 
 package com.caneseeaproject.computervision
 
-import com.caneseeproject.sensorPortals.SensorInput
-import com.caneseeproject.sensorPortals.SensorPortal
-import com.caneseeproject.sensorPortals.SensorReading
+import com.caneseeproject.sensorPortals.*
 import kotlinx.coroutines.flow.Flow
 
 
 
-interface ComputerVision {
+interface ComputerVision : Sensor<Vision, CVInput> {
 
     fun activate()
 
@@ -17,8 +15,8 @@ interface ComputerVision {
     suspend fun setMode(mode: CVInput) //app change mode of glasses
 
     companion object Factory {
-        fun create(sensorPortal: SensorPortal): ComputerVision =
-            ComputerVisionInAction(sensorPortal)
+        fun create(sensorPortal: SensorPortal<Vision, CVInput> , cvTranslator: CVTranslator): ComputerVision =
+            ComputerVisionInAction(sensorPortal , cvTranslator )
     }
 }
 
@@ -30,7 +28,7 @@ sealed class Vision : SensorReading {
     class ObjectDetection (val objects: List<DetectedObject>): Vision()
 }
 
-sealed class CVInput : SensorInput {
+sealed class CVInput : SensorControl {
     class ModeChange(val mode: Int) : CVInput()
 }
 
