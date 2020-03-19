@@ -1,4 +1,3 @@
-
 package com.caneseeaproject.computervision
 
 import com.caneseeproject.sensorPortals.*
@@ -15,7 +14,7 @@ interface ComputerVision : Sensor<Vision, CVControl> {
     suspend fun setMode(mode: CVControl) //app change mode of glasses
 
     companion object Factory {
-        fun create(sensorPortal: SensorPortal<Vision, CVControl> , cvTranslator: PortalTranslator<Vision , CVControl> = CVTranslator()): ComputerVision =
+        fun create(sensorPortal: SensorPortal , cvTranslator: PortalTranslator<Vision , CVControl> = CVTranslator()): ComputerVision =
             ComputerVisionInAction(sensorPortal , cvTranslator )
     }
 }

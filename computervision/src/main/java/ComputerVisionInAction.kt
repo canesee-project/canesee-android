@@ -15,7 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 
-internal class ComputerVisionInAction(private val cvPortal: SensorPortal<Vision, CVControl>,
+internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
                                        private val cvTranslator: PortalTranslator<Vision, CVControl> = CVTranslator()) : ComputerVision {
 
 
