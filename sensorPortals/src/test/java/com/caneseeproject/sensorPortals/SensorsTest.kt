@@ -18,7 +18,7 @@ class SensorsTest {
 
     companion object {
         lateinit var sensor: Sensor<StringReading, IntControl>
-        lateinit var portal: SensorPortal<StringReading, IntControl>
+        lateinit var portal: SensorPortal
 
         @BeforeClass
         @JvmStatic

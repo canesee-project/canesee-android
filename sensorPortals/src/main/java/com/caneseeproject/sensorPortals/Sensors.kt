@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
  * Provides a connection to a sensor. Be it from a Bluetooth or a TCP connection.
  * @author mhashim6 on 2019-12-08
  */
-interface SensorPortal<R : SensorReading, C : SensorControl> {
+interface SensorPortal {
 
     /**
      * Opens the portal.
