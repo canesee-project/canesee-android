@@ -6,32 +6,33 @@ import kotlinx.coroutines.flow.Flow
 
 
 
-interface ComputerVision : Sensor<Vision, CVInput> {
+interface ComputerVision : Sensor<Vision, CVControl> {
 
     fun activate()
 
     fun visions(): Flow<Vision>
 
-    suspend fun setMode(mode: CVInput) //app change mode of glasses
+    suspend fun setMode(mode: CVControl) //app change mode of glasses
 
     companion object Factory {
-        fun create(sensorPortal: SensorPortal<Vision, CVInput> , cvTranslator: CVTranslator): ComputerVision =
+        fun create(sensorPortal: SensorPortal<Vision, CVControl> , cvTranslator: PortalTranslator<Vision , CVControl> = CVTranslator()): ComputerVision =
             ComputerVisionInAction(sensorPortal , cvTranslator )
     }
 }
 
 sealed class Vision : SensorReading {
-    class OCR(val transcript: String) : Vision()
-    class Scenery(val scene: String) : Vision()
-    class Facial (val prettyFace: String) : Vision()
-    class Emotion (val emotion: String) : Vision()
-    class ObjectDetection (val objects: List<DetectedObject>): Vision()
+    data class OCR(val transcript: String) : Vision()
+    data class Scenery(val scene: String) : Vision()
+    data class Facial (val prettyFace: String) : Vision()
+    data class Emotion (val emotion: String) : Vision()
+    data class ObjectDetection (val objects: List<DetectedObject>): Vision()
 }
 
-sealed class CVInput : SensorControl {
-    class ModeChange(val mode: Int) : CVInput()
+sealed class CVControl : SensorControl {
+    class ModeChange(val mode: Int) : CVControl()
 }
 
 data class DetectedObject(val lbl:String, val pos:String)
+
 
 
