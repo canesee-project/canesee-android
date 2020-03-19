@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 /**
  *@author mhashim6 on 2019-12-08
  */
-class EchoSensorPortal : SensorPortal<StringReading, IntControl> {
+class EchoSensorPortal : SensorPortal {
     private val echoChamber: Channel<String> = Channel(10) //accept 10 events then suspend.
 
     override fun open() {
@@ -38,7 +38,7 @@ class EchoSensorPortal : SensorPortal<StringReading, IntControl> {
  *@author mhashim6 on 2019-12-08
  */
 class MockSensor(
-    private val portal: SensorPortal<StringReading, IntControl>,
+    private val portal: SensorPortal,
     private val translator: PortalTranslator<StringReading, IntControl>
 ) : Sensor<StringReading, IntControl> {
 
