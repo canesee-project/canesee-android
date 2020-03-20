@@ -3,10 +3,7 @@ package com.caneseeproject.bluetooth
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import com.caneseeproject.sensorPortals.Sensor
-import com.caneseeproject.sensorPortals.SensorControl
 import com.caneseeproject.sensorPortals.SensorPortal
-import com.caneseeproject.sensorPortals.SensorReading
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import java.io.InputStream
@@ -18,7 +15,7 @@ internal class BluetoothSensorPortal(private val MAC: String ) : SensorPortal {
     private val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     // val HC05 : String = "98:D3:61:FD:66:FB"
     private var device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(MAC)
-    val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(SERIAL_UUID)
+    lateinit var socket: BluetoothSocket
     private val mmInStream: InputStream = socket.inputStream
     private val mmOutStream: OutputStreamWriter = socket.outputStream.writer()
 
@@ -42,6 +39,7 @@ internal class BluetoothSensorPortal(private val MAC: String ) : SensorPortal {
     }
 
     override fun open() {
+        socket = device.createRfcommSocketToServiceRecord(SERIAL_UUID)
         bluetoothAdapter.cancelDiscovery()
         socket.connect()
     }
