@@ -11,11 +11,11 @@ import java.io.OutputStreamWriter
 import java.util.*
 
 
-internal class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
-
+internal class BluetoothSensorPortal(private val MAC: String ) : SensorPortal {
     private val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     // val HC05 : String = "98:D3:61:FD:66:FB"
     private var device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(MAC)
+
     private lateinit var socket: BluetoothSocket
     private val mmInStream: InputStream by lazy { socket.inputStream }
     private val mmOutStream: OutputStreamWriter by lazy { socket.outputStream.writer() }
@@ -25,6 +25,9 @@ internal class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
         bluetoothAdapter.cancelDiscovery()
         socket.connect()
     }
+  
+    override fun receive(): Flow<String> =
+        mmInStream.reader().buffered(1024).lineSequence().filterNotNull().asFlow()
 
     override suspend fun send(vararg messages: String) {
         mmOutStream.run {
@@ -32,11 +35,7 @@ internal class BluetoothSensorPortal(private val MAC: String) : SensorPortal {
             flush()
         }
     }
-
-    override fun readings(): Flow<String> =
-        mmInStream.reader().buffered(5).lineSequence().asFlow()
-
-
+    
     override fun shutdown() {
         socket.close()
     }
