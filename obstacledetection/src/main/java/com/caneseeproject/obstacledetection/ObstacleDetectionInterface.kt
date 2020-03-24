@@ -1,16 +1,13 @@
 package com.caneseeproject.obstacledetection
 
-import com.caneseeproject.sensorPortals.Sensor
-import com.caneseeproject.sensorPortals.SensorInput
-import com.caneseeproject.sensorPortals.SensorPortal
-import com.caneseeproject.sensorPortals.SensorReading
+import com.caneseeproject.sensorPortals.*
 import kotlinx.coroutines.flow.Flow
 
 //ODReading Constants :
 const val OBSTACLE_DISTANCE: Int = 0
 const val GLASSES_MODE: Int = 1
 
-//ODInput Constants :
+//ODControl Constants :
 const val RANGE_PERCENTAGE: Int = 0
 
 
@@ -25,23 +22,37 @@ sealed class ODReading : SensorReading {
     //TODO any other type of reading
 }
 
-sealed class ODInput : SensorInput {
+sealed class ODControl : SensorControl {
 
     //Represented with a '0' -> 0_percentage
-    class RangeControl(val percentage: Int) : ODInput()
+    class RangeControl(val percentage: Int) : ODControl()
 
     //TODO any other type of input
 
 }
 
-interface ObstacleDetector : Sensor<ODInput, ODReading> {
+interface ObstacleDetector : Sensor<ODReading, ODControl>{
+
+    /**
+     * Connecting with this cane
+     */
+    fun activate()
 
     /**
      * Provides flow of high level sensor readings
      */
-    fun detectObstacles(): Flow<ODReading.ObstacleDistance>
+    fun getCaneData(): Flow<ODReading>
+
+
+
+    /**
+     * Change the cane settings
+     */
+    suspend fun control(what: ODControl)
 
     companion object Factory {
-        fun create(portal: SensorPortal): ObstacleDetector = ObstacleDetectorImpl(portal)
+        fun create(portal: SensorPortal ,
+                   translator: PortalTranslator<ODReading, ODControl> = ODTranslator())
+                : ObstacleDetector = ObstacleDetectorImpl(portal, translator)
     }
 }
