@@ -26,29 +26,28 @@ class ComputerVisionInActionTest {
     fun testTokenizeEmotion(){
         val tokenized = cvTranslatorTest.tokenize(cvTranslatorTest_Emotion)
         println(tokenized)
-        assert(tokenized.toString().contains("Happy"))
+        assert(tokenized is Vision.Emotion && tokenized.emotion == "Happy")
     }
 
     @Test
     fun testTokenizeFacial(){
         val tokenized = cvTranslatorTest.tokenize(cvTranslatorTest_Facial)
         println(tokenized)
-        assert(tokenized.toString().contains("People"))
+        assert(tokenized is Vision.Facial && tokenized.prettyFace == "Pretty People")
     }
 
     @Test
     fun testTokenizeScenery(){
         val tokenized = cvTranslatorTest.tokenize(cvTranslatorTest_Scenery)
         println(tokenized)
-        assert(tokenized.toString().contains("Uni"))
+        assert(tokenized is Vision.Scenery && tokenized.scene == "University")
     }
 
     @Test
     fun testTokenizeObjects(){
         val tokenized = cvTranslatorTest.tokenize(cvTranslatorTest_ObjectDetection)
         println(tokenized)
-        val tokenizedString = tokenized.toString()
-        assert(tokenizedString.contains("Human") && tokenizedString.contains("Bottle"))
+        assert(tokenized is Vision.ObjectDetection && tokenized.objects.get(2) == DetectedObject("table" , "on the right"))
     }
 
 
@@ -56,7 +55,7 @@ class ComputerVisionInActionTest {
     fun testTokenizeOCR(){
         val tokenized = cvTranslatorTest.tokenize(cvTranslatorTest_OCR)
         println(tokenized.toString())
-        assert(tokenized.toString().contains("Hello!"))
+        assert(tokenized is Vision.OCR && tokenized.transcript == "Hello!")
     }
     @Test
     fun testPack(){
