@@ -35,7 +35,7 @@ internal class CaneSeeVoiceImpl(
         speakOut(
             when (secret) {
                 is Whisper.ControlWhisper -> when (secret.control) {
-                    is CVInput.ModeChange -> when (secret.control.mode) {
+                    is CVControl.ModeChange -> when (secret.control.mode) {
                         OCR -> "تم تفعيلُ وضعِ قراءةِ النصوص"
                         SCENES -> "تم تفعيلُ وَصف المَشاهد"
                         PRETTY_FACES -> "تم تفعيلُ التعرف على الأشخاص"
@@ -43,7 +43,7 @@ internal class CaneSeeVoiceImpl(
                         OBJECTS -> "تم تفعيلُ وضعِ التعرفِ على الأشياء"
                         else -> throw Exception("TTS: This is bad.")
                     }
-                    is ODInput.RangeControl -> "Distance Detection is turned on" //TODO
+                    is ODControl.RangeControl -> "Distance Detection is turned on" //TODO
                     else -> throw Exception("TTS: This is really bad.")
                 }
 
