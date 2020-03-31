@@ -46,8 +46,8 @@ class MockSensor(
         println("sensor is activated.")
     }
 
-    override suspend fun send(vararg messages: IntControl) {
-        portal.send(*(messages.map { translator.pack(it) }.toTypedArray()))
+    override suspend fun control(vararg signals: IntControl) {
+        portal.send(*(signals.map { translator.pack(it) }.toTypedArray()))
     }
 
     @FlowPreview
