@@ -22,13 +22,13 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal,
     }
 
     override fun readings(): Flow<ODReading> =
-        odPortal.receive().map { odTranslator.tokenize(it) }.filterIsInstance()
+        odPortal.receive().map { odTranslator.tokenize(it) }.filterNotNull()
 
 
     /**
      * Get data from the cane
      */
-    override fun getCaneData()  : Flow<ODReading> {
+    override fun speak()  : Flow<ODReading> {
         return readings()
     }
 

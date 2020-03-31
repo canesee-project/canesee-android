@@ -8,23 +8,21 @@ import kotlinx.coroutines.flow.filterIsInstance
 
 class ObstacleDetectorTest {
     private val testODTanslator = ODTranslator()
-    private var tokenizedMessage : ODReading? = null
-
     lateinit var packagedMessage : String
     var rangeControlTest = ODControl.RangeControl(50)
 
     @Test
     fun testTokenizingObstacleDistance() {
-        tokenizedMessage = testODTanslator.tokenize("${OBSTACLE_DISTANCE}_6.5")
+        val tokenizedMessage = testODTanslator.tokenize("${OBSTACLE_DISTANCE}_6.5")
         println(tokenizedMessage)
-        assert(tokenizedMessage != null && tokenizedMessage is ODReading.ObstacleDistance)
+        assert(tokenizedMessage is ODReading.ObstacleDistance && tokenizedMessage.distance == 6.5f)
     }
 
     @Test
     fun testTokenizingGlassesMode() {
-        tokenizedMessage = testODTanslator.tokenize("${GLASSES_MODE}_2")
+        val tokenizedMessage = testODTanslator.tokenize("${GLASSES_MODE}_2")
         println(tokenizedMessage)
-        assert(tokenizedMessage != null && tokenizedMessage is ODReading.GlassesMode)
+        assert(tokenizedMessage is ODReading.GlassesMode && tokenizedMessage.mode == 2)
     }
 
     @Test
