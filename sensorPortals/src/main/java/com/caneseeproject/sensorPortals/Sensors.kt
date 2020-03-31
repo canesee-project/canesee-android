@@ -44,6 +44,11 @@ interface SensorPortal {
 interface Sensor<R : SensorReading, C : SensorControl> {
 
     /**
+     * Activate the sensor.
+     */
+    fun activate()
+
+    /**
      * Send a message to this sensor, after encoding it with the provided encoder.
      */
     suspend fun send(vararg messages: C)
