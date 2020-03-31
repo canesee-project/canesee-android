@@ -17,7 +17,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal,
       odPortal.open()
     }
 
-    override suspend fun send(vararg messages: ODControl) {
+    override suspend fun control(vararg messages: ODControl) {
         odPortal.send(*(messages.map { odTranslator.pack(it) }.toTypedArray()))
     }
 
@@ -37,7 +37,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal,
      * Send data into the cane (set the cane)
      */
     override suspend fun control(what: ODControl) {
-        send(what)
+        control(what)
     }
 
 }

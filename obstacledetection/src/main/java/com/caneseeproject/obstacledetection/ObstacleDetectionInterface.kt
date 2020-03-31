@@ -34,11 +34,6 @@ sealed class ODControl : SensorControl {
 interface ObstacleDetector : Sensor<ODReading, ODControl>{
 
     /**
-     * Connecting with this cane
-     */
-    fun activate()
-
-    /**
      * Provides flow of high level sensor readings
      */
     fun requireData(): Flow<ODReading>
