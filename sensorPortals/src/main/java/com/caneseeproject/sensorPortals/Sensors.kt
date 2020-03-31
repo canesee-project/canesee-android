@@ -39,12 +39,13 @@ interface SensorPortal {
 /**
  * Abstract Sensor, meant to be implemented by actual sensors/ services,
  * whether they are remote or local.
+ * May operate using a [SensorPortal].
  * @author mhashim6 on 2019-12-08
  */
 interface Sensor<R : SensorReading, C : SensorControl> {
 
     /**
-     * Activate the sensor.
+     * Activate the [Sensor].
      */
     fun activate()
 
@@ -54,7 +55,7 @@ interface Sensor<R : SensorReading, C : SensorControl> {
     suspend fun control(vararg signals: C)
 
     /**
-     * Receive readings from this sensor, after tokenize-ing them with the provided tokenizer.
+     * Receive readings from this [Sensor], after tokenize-ing them with the provided tokenizer.
      */
     fun readings(): Flow<R>
 }
