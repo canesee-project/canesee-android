@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ComputerVision : Sensor<Vision, CVControl> {
 
-    fun activate()
-
     fun visions(): Flow<Vision>
 
     suspend fun setMode(mode: CVControl) //app change mode of glasses
