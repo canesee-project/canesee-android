@@ -23,7 +23,7 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
         cvPortal.open()
     }
 
-    override suspend fun send(vararg modes: CVControl) {
+    override suspend fun control(vararg modes: CVControl) {
         cvPortal.send(*(modes.map { cvTranslator.pack(it) }.toTypedArray()))
     }
 
@@ -36,7 +36,7 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
     }
 
     override suspend fun setMode(mode: CVControl) {
-        send(mode)
+        control(mode)
     }
 
 }
