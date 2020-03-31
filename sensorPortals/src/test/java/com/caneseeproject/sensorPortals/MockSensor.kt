@@ -42,6 +42,10 @@ class MockSensor(
     private val translator: PortalTranslator<StringReading, IntControl>
 ) : Sensor<StringReading, IntControl> {
 
+    override fun activate() {
+        println("sensor is activated.")
+    }
+
     override suspend fun send(vararg messages: IntControl) {
         portal.send(*(messages.map { translator.pack(it) }.toTypedArray()))
     }

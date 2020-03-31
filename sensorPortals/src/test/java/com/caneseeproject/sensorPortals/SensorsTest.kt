@@ -33,6 +33,7 @@ class SensorsTest {
     @Test
     fun testSensorConnection() {
         assert(portal.isOpen)
+        sensor.activate()
     }
 
     @Test
