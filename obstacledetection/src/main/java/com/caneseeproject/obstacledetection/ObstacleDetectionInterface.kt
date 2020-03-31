@@ -43,7 +43,7 @@ interface ObstacleDetector : Sensor<ODReading, ODControl>{
     /**
      * Change the cane settings
      */
-    suspend fun control(what: ODControl)
+    suspend fun changeSettings(what: ODControl)
 
     companion object Factory {
         fun create(portal: SensorPortal ,

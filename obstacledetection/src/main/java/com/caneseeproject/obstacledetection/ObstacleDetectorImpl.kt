@@ -36,7 +36,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal,
     /**
      * Send data into the cane (set the cane)
      */
-    override suspend fun control(what: ODControl) {
+    override suspend fun changeSettings(what: ODControl) {
         control(what)
     }
 
