@@ -28,7 +28,7 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal,
     /**
      * Get data from the cane
      */
-    override fun speak()  : Flow<ODReading> {
+    override fun requireData()  : Flow<ODReading> {
         return readings()
     }
 

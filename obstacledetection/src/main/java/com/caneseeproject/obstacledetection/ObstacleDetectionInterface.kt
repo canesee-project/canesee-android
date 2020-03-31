@@ -41,7 +41,7 @@ interface ObstacleDetector : Sensor<ODReading, ODControl>{
     /**
      * Provides flow of high level sensor readings
      */
-    fun speak(): Flow<ODReading>
+    fun requireData(): Flow<ODReading>
 
 
 
