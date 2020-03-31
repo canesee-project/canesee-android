@@ -49,9 +49,9 @@ interface Sensor<R : SensorReading, C : SensorControl> {
     fun activate()
 
     /**
-     * Send a message to this sensor, after encoding it with the provided encoder.
+     * Send control signals to this [Sensor] .
      */
-    suspend fun send(vararg messages: C)
+    suspend fun control(vararg signals: C)
 
     /**
      * Receive readings from this sensor, after tokenize-ing them with the provided tokenizer.

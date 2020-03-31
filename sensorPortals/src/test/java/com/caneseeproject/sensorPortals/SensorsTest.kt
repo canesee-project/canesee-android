@@ -46,7 +46,7 @@ class SensorsTest {
                     .also { println(it); assert(it == "5566") }
             }
 
-            sensor.send(55.toControl(), 66.toControl())
+            sensor.control(55.toControl(), 66.toControl())
 
             delay(2000)
             portal.shutdown()
