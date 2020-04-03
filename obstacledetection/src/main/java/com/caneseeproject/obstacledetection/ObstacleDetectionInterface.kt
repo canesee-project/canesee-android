@@ -33,17 +33,6 @@ sealed class ODControl : SensorControl {
 
 interface ObstacleDetector : Sensor<ODReading, ODControl>{
 
-    /**
-     * Provides flow of high level sensor readings
-     */
-    fun requireData(): Flow<ODReading>
-
-
-
-    /**
-     * Change the cane settings
-     */
-    suspend fun changeSettings(what: ODControl)
 
     companion object Factory {
         fun create(portal: SensorPortal ,

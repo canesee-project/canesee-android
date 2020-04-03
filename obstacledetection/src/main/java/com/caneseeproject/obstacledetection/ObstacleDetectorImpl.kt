@@ -25,21 +25,6 @@ internal class ObstacleDetectorImpl(private val odPortal: SensorPortal,
         odPortal.receive().map { odTranslator.tokenize(it) }.filterNotNull()
 
 
-    /**
-     * Get data from the cane
-     */
-    override fun requireData()  : Flow<ODReading> {
-        return readings()
-    }
-
-
-    /**
-     * Send data into the cane (set the cane)
-     */
-    override suspend fun changeSettings(what: ODControl) {
-        control(what)
-    }
-
 }
 
 class ODTranslator : PortalTranslator<ODReading, ODControl>{
