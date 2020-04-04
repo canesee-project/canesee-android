@@ -2,17 +2,14 @@ package com.caneseeaproject.computervision
 
 import android.util.Log
 import com.caneseeproject.sensorPortals.PortalTranslator
-import com.caneseeproject.sensorPortals.Sensor
 import com.caneseeproject.sensorPortals.SensorPortal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 
 
 internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
@@ -63,7 +60,7 @@ class CVTranslator : PortalTranslator<Vision, CVControl> {
 
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
-        } catch (e: JSONException) {
+        } catch (e: JsonSyntaxException) {
             Log.e("CV_TOKENIZE", e.localizedMessage)
             return null
         }
