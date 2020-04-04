@@ -3,7 +3,7 @@ package com.caneseeproject.tts
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import com.caneseeaproject.computervision.*
-import com.caneseeproject.obstacledetection.ODInput
+import com.caneseeproject.obstacledetection.ODControl
 import com.caneseeproject.obstacledetection.ODReading
 import com.caneseeproject.sensorPortals.SensorControl
 import com.caneseeproject.sensorPortals.SensorReading
