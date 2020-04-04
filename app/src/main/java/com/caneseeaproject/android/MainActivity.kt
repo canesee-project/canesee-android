@@ -10,12 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.caneseeaproject.computervision.*
 
 
-
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
 
     private lateinit var caneSee: CaneSeeService
     private val serviceConnection = object : ServiceConnection {
@@ -43,11 +38,11 @@ class MainActivity : AppCompatActivity() {
     fun activateDevices() {
         caneSee.activateGlasses()
         while (true) {
-            caneSee.controlGlasses(CVInput.ModeChange(OCR))
-            caneSee.controlGlasses(CVInput.ModeChange(SCENES))
-            caneSee.controlGlasses(CVInput.ModeChange(PRETTY_FACES))
-            caneSee.controlGlasses(CVInput.ModeChange(EMOTIONS))
-            caneSee.controlGlasses(CVInput.ModeChange(OBJECTS))
+            caneSee.controlGlasses(CVControl.ModeChange(OCR))
+            caneSee.controlGlasses(CVControl.ModeChange(SCENES))
+            caneSee.controlGlasses(CVControl.ModeChange(PRETTY_FACES))
+            caneSee.controlGlasses(CVControl.ModeChange(EMOTIONS))
+            caneSee.controlGlasses(CVControl.ModeChange(OBJECTS))
 //            caneSee.activateCane()
         }
     }
@@ -57,3 +52,4 @@ class MainActivity : AppCompatActivity() {
         unbindService(serviceConnection)
     }
 }
+
