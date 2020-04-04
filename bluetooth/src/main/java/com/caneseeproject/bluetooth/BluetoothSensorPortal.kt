@@ -40,7 +40,7 @@ internal class BluetoothSensorPortal(private val MAC: String ) : SensorPortal {
         socket.close()
     }
 
-    override val isActive: Boolean
+    override val isOpen: Boolean
         get() = socket.isConnected
 
     companion object {
