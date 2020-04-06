@@ -2,6 +2,7 @@ package com.caneseeproject.sensorPortals
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -9,10 +10,26 @@ import kotlinx.coroutines.flow.map
 /**
  *@author mhashim6 on 2019-12-08
  */
-class MockSensorPortal : SensorPortal {
-    override fun connect(): Sensor {
-        println("sensor is connected")
-        return MockEchoSensor()
+class EchoSensorPortal : SensorPortal {
+    private val echoChamber: Channel<String> = Channel(10) //accept 10 events then suspend.
+
+    override fun open() {
+        isOpen = true
+        println("portal is open")
+    }
+
+    override suspend fun send(vararg messages: String) {
+        messages.forEach { echoChamber.send(it) }
+    }
+
+    @FlowPreview
+    override fun receive(): Flow<String> = echoChamber.consumeAsFlow().filterNotNull()
+
+    override var isOpen: Boolean = false
+
+    override fun shutdown() {
+        isOpen = false
+        println("portal is shutdown")
     }
 }
 
@@ -20,27 +37,25 @@ class MockSensorPortal : SensorPortal {
 /**
  *@author mhashim6 on 2019-12-08
  */
-class MockEchoSensor : Sensor {
-    override var isActive: Boolean = true
-    private val echoChamber: Channel<String> = Channel(10) //accept 10 events then suspend.
+class MockSensor(
+    private val portal: SensorPortal,
+    private val translator: PortalTranslator<StringReading, IntControl>
+) : Sensor<StringReading, IntControl> {
 
-    override suspend fun <T : SensorInput> send(encode: InputEncoder<T>, vararg messages: T) {
-        messages.forEach { echoChamber.send(encode(it)) }
+    override fun activate() {
+        println("sensor is activated.")
+    }
+
+    override suspend fun control(vararg signals: IntControl) {
+        portal.send(*(signals.map { translator.pack(it) }.toTypedArray()))
     }
 
     @FlowPreview
-    override fun <T : SensorReading> readings(tokenize: ReadingTokenizer<T>) =
-        echoChamber.consumeAsFlow().map { tokenize(it) }.filterNotNull()
-
-    override fun shutdown() {
-        isActive = false
-        echoChamber.cancel()
-        println("service is shutdown")
-    }
-
+    override fun readings(): Flow<StringReading> =
+        portal.receive().map { translator.tokenize(it) }.filterNotNull()
 }
 
-val mockEncode: InputEncoder<SensorInput> = { encodedInput ->
-    if (encodedInput is StringInput) encodedInput.value else throw Exception(":(")
+class MockTranslator : PortalTranslator<StringReading, IntControl> {
+    override fun pack(control: IntControl): String = control.value.toString()
+    override fun tokenize(reading: String): StringReading? = StringReading(reading)
 }
-val mockTokenize: ReadingTokenizer<SensorReading> = { reading -> StringReading(reading) }

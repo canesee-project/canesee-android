@@ -5,7 +5,7 @@ import android.speech.tts.TextToSpeech
 import com.caneseeaproject.computervision.*
 import com.caneseeproject.obstacledetection.ODInput
 import com.caneseeproject.obstacledetection.ODReading
-import com.caneseeproject.sensorPortals.SensorInput
+import com.caneseeproject.sensorPortals.SensorControl
 import com.caneseeproject.sensorPortals.SensorReading
 
 
@@ -35,15 +35,15 @@ internal class CaneSeeVoiceImpl(
         speakOut(
             when (secret) {
                 is Whisper.ControlWhisper -> when (secret.control) {
-                    is CVInput.ModeChange -> when (secret.control.mode) {
+                    is CVControl.ModeChange -> when (secret.control.mode) {
                         OCR -> "تم تفعيلُ وضعِ قراءةِ النصوص"
                         SCENES -> "تم تفعيلُ وَصف المَشاهد"
-                        PRETTY_FACES -> "تم تفعيلُ التعرف على الوجوه"
+                        PRETTY_FACES -> "تم تفعيلُ التعرف على الأشخاص"
                         EMOTIONS -> "تم تفعيلُ وضعِ التعرفِ على تعابير الوجه"
                         OBJECTS -> "تم تفعيلُ وضعِ التعرفِ على الأشياء"
                         else -> throw Exception("TTS: This is bad.")
                     }
-                    is ODInput.RangeControl -> "Distance Detection is turned on" //TODO
+                    is ODControl.RangeControl -> "Distance Detection is turned on" //TODO
                     else -> throw Exception("TTS: This is really bad.")
                 }
 
@@ -66,6 +66,6 @@ internal class CaneSeeVoiceImpl(
 
 sealed class Whisper {
     class AppWhisper(val msg: String) : Whisper()
-    class ControlWhisper(val control: SensorInput) : Whisper()
+    class ControlWhisper(val control: SensorControl) : Whisper()
     class ReadingWhisper(val reading: SensorReading) : Whisper()
 }

@@ -2,7 +2,6 @@ package com.caneseeproject.sensorPortals
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.flow.take
@@ -18,38 +17,40 @@ import org.junit.Test
 class SensorsTest {
 
     companion object {
-        lateinit var sensor: Sensor
+        lateinit var sensor: Sensor<StringReading, IntControl>
+        lateinit var portal: SensorPortal
 
         @BeforeClass
         @JvmStatic
         fun initTest() {
-            sensor = MockSensorPortal().connect()
+            portal = EchoSensorPortal().apply {
+                open()
+            }
+            sensor = MockSensor(portal, MockTranslator())
         }
     }
 
-
     @Test
     fun testSensorConnection() {
-        assert(sensor.isActive)
+        assert(portal.isOpen)
+        sensor.activate()
     }
 
     @Test
     fun testSensorIncomingMessages() {
         runBlocking {
-
             launch {
-                sensor.readings(mockTokenize).take(2)
-                    .filterIsInstance<StringReading>()
+                sensor.readings().take(2)
                     .map { it.value }
                     .reduce { acc, s -> acc + s }
-                    .also { println(it); assert(it == "Hello World") }
+                    .also { println(it); assert(it == "5566") }
             }
 
-            sensor.send(mockEncode, "Hello".toInput(), " World".toInput())
+            sensor.control(55.toControl(), 66.toControl())
 
             delay(2000)
-            sensor.shutdown()
-            assert(sensor.isActive.not())
+            portal.shutdown()
+            assert(portal.isOpen.not())
         }
     }
 }
