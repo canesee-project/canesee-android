@@ -1,4 +1,4 @@
-package com.caneseeaproject.computervision
+package com.caneseeproject.computervision
 
 import com.caneseeproject.sensorPortals.*
 import kotlinx.coroutines.flow.Flow

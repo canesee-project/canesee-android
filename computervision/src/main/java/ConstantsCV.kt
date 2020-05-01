@@ -1,4 +1,4 @@
-package com.caneseeaproject.computervision
+package com.caneseeproject.computervision
 
 const val OCR = 1
 const val SCENES = 2

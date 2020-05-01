@@ -1,4 +1,4 @@
-package com.caneseeaproject.computervision
+package com.caneseeproject.computervision
 
 import android.util.Log
 import com.caneseeproject.sensorPortals.PortalTranslator
@@ -7,9 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
 
 
 internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
