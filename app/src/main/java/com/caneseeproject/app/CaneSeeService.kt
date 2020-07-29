@@ -8,8 +8,10 @@ import com.caneseeproject.computervision.CVControl
 import com.caneseeproject.computervision.ComputerVision
 import com.caneseeproject.computervision.Vision
 import com.caneseeproject.obstacledetection.ODControl
-import com.caneseeproject.obstacledetection.ODReading
 import com.caneseeproject.obstacledetection.ObstacleDetector
+import com.caneseeproject.tts.CaneSeeVoice
+import com.caneseeproject.tts.Whisper
+import com.caneseeproject.tts.toWhisper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -26,6 +28,8 @@ class CaneSeeService : Service(), CoroutineScope {
         get() = Dispatchers.IO
 
 
+    lateinit var caneSeeVoice: CaneSeeVoice
+
     private val cane: ObstacleDetector by lazy { ObstacleDetector.create(BluetoothPortal(CANE_MAC)) }
     private val glasses: ComputerVision by lazy { ComputerVision.create(BluetoothPortal(GLASSES_MAC)) }
 
@@ -33,13 +37,14 @@ class CaneSeeService : Service(), CoroutineScope {
     fun activateGlasses() {
         glasses.activate()
         debug("glasses are connected successfully.")
+        caneSeeVoice.whisper("glasses are connected successfully.".toWhisper())
         useGlasses()
     }
 
     private fun useGlasses() = launch {
         glasses.visions().collect { vision ->
             when (vision) {
-                is Vision.OCR -> outLoud(vision.transcript)
+                is Vision.OCR -> outLoud(vision.transcript.toWhisper())
             }
         }
     }
@@ -51,6 +56,7 @@ class CaneSeeService : Service(), CoroutineScope {
     fun activateCane() {
         cane.activate()
         debug("cane is connected successfully.")
+        caneSeeVoice.whisper("cane is connected successfully.".toWhisper())
         useCane()
     }
 
@@ -60,18 +66,12 @@ class CaneSeeService : Service(), CoroutineScope {
 
     private fun useCane() = launch {
         cane.readings().collect { reading ->
-            outLoud(
-                when (reading) {
-                    is ODReading.ObstacleDistance -> reading.distance.toString()
-                    is ODReading.GlassesMode -> "OD glasses mode: $reading"
-                }
-            )
+            outLoud(reading.toWhisper())
         }
     }
 
-    private fun outLoud(what: String) = main.launch {
-        //TODO: replace with TTS.
-        debug(what)
+    private fun outLoud(what: Whisper) = main.launch {
+        caneSeeVoice.whisper(what)
     }
 
     override fun onBind(intent: Intent?) = CaneSeeServiceBinder()
