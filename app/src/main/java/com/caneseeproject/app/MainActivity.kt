@@ -29,14 +29,14 @@ class MainActivity : AppCompatActivity() {
                 when (status) {
                     SUCCESS -> {
                         caneSee.caneSeeVoice = caneSeeVoice
-                        caneSeeVoice.whisper("Hello!".toWhisper())
+                        caneSeeVoice.whisper("مرحباً بك! أنا ليلى! أسعدُ بخدمتك!".toWhisper())
+                        activateDevices()
                     }
                     else -> {
                         error("tts failure")
                     }
                 }
             }
-//            activateDevices()
         }
     }
 
@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
     private fun initButtons() {
         ocr_btn.setOnClickListener {
             caneSee.controlGlasses(CVControl.ModeChange(OCR))
-
         }
         obj_detec.setOnClickListener {
             caneSee.controlGlasses(CVControl.ModeChange(OBJECTS))
@@ -74,14 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     fun activateDevices() {
         caneSee.activateGlasses()
-        while (true) {
-            caneSee.controlGlasses(CVControl.ModeChange(OCR))
-            caneSee.controlGlasses(CVControl.ModeChange(SCENES))
-            caneSee.controlGlasses(CVControl.ModeChange(PRETTY_FACES))
-            caneSee.controlGlasses(CVControl.ModeChange(EMOTIONS))
-            caneSee.controlGlasses(CVControl.ModeChange(OBJECTS))
-//            caneSee.activateCane()
-        }
+//      caneSee.activateCane()
     }
 
     override fun onDestroy() {

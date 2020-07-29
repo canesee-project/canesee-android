@@ -6,7 +6,6 @@ import android.os.Binder
 import com.caneseeproject.bluetooth.BluetoothPortal
 import com.caneseeproject.computervision.CVControl
 import com.caneseeproject.computervision.ComputerVision
-import com.caneseeproject.computervision.Vision
 import com.caneseeproject.obstacledetection.ODControl
 import com.caneseeproject.obstacledetection.ObstacleDetector
 import com.caneseeproject.tts.CaneSeeVoice
@@ -35,29 +34,39 @@ class CaneSeeService : Service(), CoroutineScope {
 
 
     fun activateGlasses() {
-        glasses.activate()
-        debug("glasses are connected successfully.")
-        caneSeeVoice.whisper("glasses are connected successfully.".toWhisper())
-        useGlasses()
+        try {
+            glasses.activate()
+            debug("glasses are connected successfully.")
+            caneSeeVoice.whisper("تم توصيلُ النظارات".toWhisper())
+            useGlasses()
+        } catch (e: Exception) {
+            wtf("cannot connect to glasses.")
+            caneSeeVoice.whisper("لا يمكن الإتصالُ بالنظارات. حاول مرةً أُخرى".toWhisper())
+        }
     }
 
     private fun useGlasses() = launch {
-        glasses.visions().collect { vision ->
-            when (vision) {
-                is Vision.OCR -> outLoud(vision.transcript.toWhisper())
+        try {
+            glasses.visions().collect { vision ->
+                outLoud(vision.toWhisper())
             }
+        } catch (e: Exception) {
+            wtf("glasses are disconnected.")
+            caneSeeVoice.whisper("انقطعَ الإتصالُ بالنظَّارات".toWhisper())
         }
     }
 
     fun controlGlasses(action: CVControl) = launch {
         glasses.setMode(action)
+        outLoud(action.toWhisper())
     }
 
     fun activateCane() {
         cane.activate()
         debug("cane is connected successfully.")
-        caneSeeVoice.whisper("cane is connected successfully.".toWhisper())
+        caneSeeVoice.whisper("تم توصيل العصا".toWhisper())
         useCane()
+        caneSeeVoice.whisper("انقطعَ الإتصالُ بالعصا".toWhisper())
     }
 
     fun controlCane(action: ODControl) = launch {
