@@ -1,4 +1,4 @@
-package com.caneseeproject.android
+package com.caneseeproject.app
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

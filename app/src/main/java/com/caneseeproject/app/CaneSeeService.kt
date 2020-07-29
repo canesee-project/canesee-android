@@ -1,4 +1,4 @@
-package com.caneseeproject.android
+package com.caneseeproject.app
 
 import android.app.Service
 import android.content.Intent
