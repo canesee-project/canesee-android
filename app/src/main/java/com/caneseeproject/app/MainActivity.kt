@@ -1,4 +1,4 @@
-package com.caneseeproject.android
+package com.caneseeproject.app
 
 import android.content.ComponentName
 import android.content.Context

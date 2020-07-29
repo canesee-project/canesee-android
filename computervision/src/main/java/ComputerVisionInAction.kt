@@ -3,8 +3,10 @@ package com.caneseeproject.computervision
 import android.util.Log
 import com.caneseeproject.sensorPortals.PortalTranslator
 import com.caneseeproject.sensorPortals.SensorPortal
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
