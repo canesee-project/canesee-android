@@ -18,8 +18,8 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
         cvPortal.open()
     }
 
-    override suspend fun control(vararg modes: CVControl) {
-        cvPortal.send(*(modes.map { cvTranslator.pack(it) }.toTypedArray()))
+    override suspend fun control(vararg signals: CVControl) {
+        cvPortal.send(*(signals.map { cvTranslator.pack(it) }.toTypedArray()))
     }
 
     override fun readings(): Flow<Vision> =
@@ -38,9 +38,9 @@ internal class ComputerVisionInAction(private val cvPortal: SensorPortal,
 
 class CVTranslator : PortalTranslator<Vision, CVControl> {
     val gson = Gson()
-    override fun tokenize(rawData: String): Vision? {
+    override fun tokenize(reading: String): Vision? {
         try {
-            val raw =  gson.fromJson(rawData, JsonObject::class.java)
+            val raw = gson.fromJson(reading, JsonObject::class.java)
 
             return when (raw.get("type").asInt) {
                 OCR -> Vision.OCR(raw.get("value").asString)
@@ -59,14 +59,14 @@ class CVTranslator : PortalTranslator<Vision, CVControl> {
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
         } catch (e: RuntimeException) {
-            Log.e("CV_TOKENIZE:", "$rawData \n ${e.localizedMessage}")
+            Log.e("CV_TOKENIZE:", "$reading \n ${e.localizedMessage}")
             return null
         }
     }
 
-    override fun pack(processed: CVControl): String {
-        return when (processed) {
-            is CVControl.ModeChange -> "0_${processed.mode}"
+    override fun pack(control: CVControl): String {
+        return when (control) {
+            is CVControl.ModeChange -> "0_${control.mode}"
         }
     }
 
