@@ -40,7 +40,7 @@ class CaneSeeService : Service(), CoroutineScope {
             caneSeeVoice.whisper("تم توصيلُ النظارات".toWhisper())
             useGlasses()
         } catch (e: Exception) {
-            wtf("cannot connect to glasses.")
+            wtf("cannot connect to glasses. \n${e.localizedMessage}")
             caneSeeVoice.whisper("لا يمكن الإتصالُ بالنظارات. حاول مرةً أُخرى".toWhisper())
         }
     }
@@ -51,7 +51,7 @@ class CaneSeeService : Service(), CoroutineScope {
                 outLoud(vision.toWhisper())
             }
         } catch (e: Exception) {
-            wtf("glasses are disconnected.")
+            wtf("glasses are disconnected.\n${e.localizedMessage}")
             caneSeeVoice.whisper("انقطعَ الإتصالُ بالنظَّارات".toWhisper())
         }
     }

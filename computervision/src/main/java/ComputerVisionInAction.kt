@@ -5,7 +5,6 @@ import com.caneseeproject.sensorPortals.PortalTranslator
 import com.caneseeproject.sensorPortals.SensorPortal
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -59,8 +58,8 @@ class CVTranslator : PortalTranslator<Vision, CVControl> {
 
                 else -> null // (corrupt reading, discard.) the russians did it for cv !
             }
-        } catch (e: JsonSyntaxException) {
-            Log.e("CV_TOKENIZE", e.localizedMessage)
+        } catch (e: RuntimeException) {
+            Log.e("CV_TOKENIZE:", "$rawData \n ${e.localizedMessage}")
             return null
         }
     }
